@@ -6,9 +6,10 @@ export const getProducts = (params) => {
     return axios
       .get("http://localhost:1337/productos", { params })
       .then((res) => {
+        if (!res) return;
         dispatch({
           type: "GET_PRODUCTS",
-          data: { products: res.data },
+          data: res.data,
           params,
         });
       });

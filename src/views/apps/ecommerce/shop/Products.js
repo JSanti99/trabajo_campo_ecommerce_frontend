@@ -40,7 +40,6 @@ const ProductsPage = (props) => {
 
   // ** Render pages
   const renderPageItems = () => {
-    console.log("tienda", store);
     const arrLength =
       store.totalProducts !== 0 && store.products.length !== 0
         ? Number(store.totalProducts) / store.products.length

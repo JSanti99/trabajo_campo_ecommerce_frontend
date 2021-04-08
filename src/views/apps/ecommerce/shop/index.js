@@ -35,8 +35,8 @@ const Shop = () => {
   useEffect(() => {
     dispatch(
       getProducts({
-        _start: 0,
-        _limit: 10,
+        page: 1,
+        perPage: 6,
       })
     );
   }, [dispatch]);
