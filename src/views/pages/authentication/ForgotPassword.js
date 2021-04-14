@@ -6,7 +6,7 @@ import { isUserLoggedIn } from "@utils";
 import { useSkin } from "@hooks/useSkin";
 import useJwt from "@src/auth/jwt/useJwt";
 import { useForm } from "react-hook-form";
-import { toast, Slide } from "react-toastify";
+import { toast } from "react-toastify";
 import { Link, useHistory } from "react-router-dom";
 import { ChevronLeft } from "react-feather";
 import { Redirect } from "react-router-dom";
@@ -55,7 +55,7 @@ const ProgressToast = ({ status }) => (
 const ForgotPassword = () => {
   const [skin, setSkin] = useSkin();
   const history = useHistory();
-  const [email, setEmail] = useState("admin@gmail.com");
+  const [email, setEmail] = useState("jhonsebastianmora@gmail.com");
   const { register, errors, handleSubmit } = useForm();
   const illustration =
       skin === "dark"
