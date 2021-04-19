@@ -118,6 +118,14 @@ export default class JwtService {
     return axios.post(this.jwtConfig.registerEndpoint, ...args);
   }
 
+  forgot(...args) {
+    return axios.post(this.jwtConfig.forgotEndpoint, ...args);
+  }
+
+  reset(...args) {
+    return axios.post(this.jwtConfig.resetEndpoint, ...args);
+  }
+
   refreshToken() {
     let instance = axios.create();
     // delete instance.defaults.headers.common["Authorization"];
