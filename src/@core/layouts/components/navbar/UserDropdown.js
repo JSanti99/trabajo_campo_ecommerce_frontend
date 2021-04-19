@@ -48,7 +48,12 @@ const UserDropdown = () => {
   }, []);
 
   //** Vars
-  const userAvatar = (userData && userData.avatar) || defaultAvatar;
+  console.log({ userData });
+  const userAvatar = userData
+    ? userData.userImg.url
+      ? `http://localhost:1337${userData.userImg.url}`
+      : defaultAvatar
+    : defaultAvatar;
 
   return (
     <UncontrolledDropdown tag="li" className="dropdown-user nav-item">
@@ -60,10 +65,10 @@ const UserDropdown = () => {
       >
         <div className="user-nav d-sm-flex d-none">
           <span className="user-name font-weight-bold">
-            {/* {(userData && userData["username"]) || "John Doe"} */}
+            {(userData && userData["username"]) || "John Doe"}
           </span>
           <span className="user-status">
-            {/* {(userData && userData.role.type) || "Admin"} */}
+            {(userData && userData.role.type) || "Admin"}
           </span>
         </div>
         <Avatar img={userAvatar} imgHeight="40" imgWidth="40" status="online" />
