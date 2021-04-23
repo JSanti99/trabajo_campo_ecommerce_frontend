@@ -83,10 +83,6 @@ export default class JwtService {
   }
 
   getToken() {
-    console.log(
-      "LOCALSTORAGE",
-      localStorage.getItem(this.jwtConfig.storageTokenKeyName)
-    );
     return JSON.parse(localStorage.getItem(this.jwtConfig.storageTokenKeyName));
   }
 
