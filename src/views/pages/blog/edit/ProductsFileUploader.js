@@ -13,9 +13,8 @@ import {
   Col,
 } from "reactstrap";
 
-const FileUploaderRestrictions = () => {
+const ProductsFileUploader = ({ files, setFiles }) => {
   const [previewArr, setPreviewArr] = useState([]);
-  const [files, setFiles] = useState([]);
 
   const uppy = new Uppy({
     meta: { type: "avatar" },
@@ -35,7 +34,7 @@ const FileUploaderRestrictions = () => {
   const renderPreview = () => {
     if (previewArr.length) {
       return previewArr.map((src, index) => (
-        <Col md="4" lg="3">
+        <Col sm="4" md="3" lg="2">
           {/* <img className="rounded mt-2 mr-1" /> */}
           <Card key={index} className="text-center mb-3">
             <img key={src} className="img-fluid" src={src} alt="avatar" />
@@ -71,25 +70,13 @@ const FileUploaderRestrictions = () => {
         <CardTitle tag="h4"> Subir Imagenes</CardTitle>
       </CardHeader>
       <CardBody>
-        <CardText>
-          Use prop <code>restrictions</code> add upload restrictions like{" "}
-          <code>maxNumberOfFiles</code> &<code>allowedFileTypes</code>. Refer
-          this{" "}
-          <a
-            href="https://uppy.io/docs/uppy/#restrictions"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            link
-          </a>{" "}
-          for more info.
-        </CardText>
+        <CardText></CardText>
         <DragDrop uppy={uppy} />
-        {JSON.stringify(files)}
+        <br></br>
         <Row>{renderPreview()}</Row>
       </CardBody>
     </Card>
   );
 };
 
-export default FileUploaderRestrictions;
+export default ProductsFileUploader;

@@ -26,7 +26,8 @@ import {
   Button,
 } from "reactstrap";
 
-import FileUploaderRestrictions from "./FileUploaderRestrictions";
+import ProductsFileUploader from "./ProductsFileUploader";
+import VariacionesForm from "./Variations";
 
 import "@styles/react/libs/editor/editor.scss";
 import "@styles/base/plugins/forms/form-quill-editor.scss";
@@ -36,6 +37,7 @@ import "@styles/base/pages/page-blog.scss";
 import "uppy/dist/uppy.css";
 import "@uppy/status-bar/dist/style.css";
 import "@styles/react/libs/file-uploader/file-uploader.scss";
+import "react-slidedown/lib/slidedown.css";
 
 const BlogEdit = () => {
   // ** State
@@ -52,27 +54,37 @@ const BlogEdit = () => {
   );
   const editorState = EditorState.createWithContent(contentState);
 
-  const [data, setData] = useState(null),
-    [title, setTitle] = useState(""),
-    [stock, setStock] = useState(0),
+  const [title, setTitle] = useState(""),
     [slug, setSlug] = useState(""),
-    [status, setStatus] = useState(""),
+    [categories, setCategories] = useState([]),
+    [productCategories, setProductCategories] = useState([]),
+    [code, setCode] = useState("AT495AT85UUGCO"),
+    [gender, setGender] = useState([
+      { value: "hombre", label: "Hombre" },
+      { value: "mujer", label: "Mujer" },
+    ]),
+    [productGenres, setProductGenres] = useState([]),
+    [variations, setVariations] = useState([
+      {
+        stock: 0,
+        measures: { value: "XS", label: "XS" },
+        productSizes: [],
+        status: "",
+      },
+    ]),
+    // [stock, setStock] = useState(0),
+    // [status, setStatus] = useState(""),
+
     [content, setContent] = useState(editorState),
-    [blogCategories, setBlogCategories] = useState([]),
     [featuredImg, setFeaturedImg] = useState(null),
     [imgPath, setImgPath] = useState("banner.jpg"),
-    [categories, setCategories] = useState([]);
+    [files, setFiles] = useState([]);
 
   useEffect(() => {
     axios.get("/blog/list/data/edit").then((res) => {
-      setData(res.data);
-
-      setSlug(res.data.slug);
-      setBlogCategories(res.data.blogCategories);
       setFeaturedImg(res.data.featuredImage);
-      setStatus(res.data.status);
     });
-
+    setGender();
     axios.get("http://localhost:1337/categorias").then((res) => {
       setCategories(res.data);
     });
@@ -92,6 +104,17 @@ const BlogEdit = () => {
     reader.readAsDataURL(files[0]);
   };
 
+  const textToSlug = (text) => {
+    return text
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, "-") // Replace spaces with -
+      .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+      .replace(/\-\-+/g, "-") // Replace multiple - with single -
+      .replace(/^-+/, "") // Trim - from start of text
+      .replace(/-+$/, ""); // Trim - from end of text)
+  };
+
   return (
     <div className="blog-edit-wrapper">
       <Breadcrumbs
@@ -100,11 +123,12 @@ const BlogEdit = () => {
         breadCrumbParent2="Blog"
         breadCrumbActive="Edit"
       />
-      {data !== null ? (
-        <Row>
-          <Col sm="12">
-            <Card>
-              <CardBody>
+
+      <Row>
+        <Col sm="12">
+          <Card>
+            <CardBody>
+              {userData ? (
                 <Media>
                   <Avatar
                     className="mr-75"
@@ -123,145 +147,155 @@ const BlogEdit = () => {
                     </CardText>
                   </Media>
                 </Media>
-                <Form className="mt-2" onSubmit={(e) => e.preventDefault()}>
-                  <Row>
-                    <Col md="6">
-                      <FormGroup className="mb-2">
-                        <Label for="blog-edit-stock">Nombre Producto</Label>
-                        <Input
-                          id="blog-edit-stock"
-                          value={title}
-                          onChange={(e) => {
-                            setTile(e.target.value);
-                          }}
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col md="6">
-                      <FormGroup className="mb-2">
-                        <Label for="blog-edit-category">Category</Label>
-                        <Select
-                          id="blog-edit-category"
-                          isClearable={false}
-                          theme={selectThemeColors}
-                          value={blogCategories}
-                          isMulti
-                          name="colors"
-                          options={categories}
-                          className="react-select"
-                          classNamePrefix="select"
-                          onChange={(data) => setBlogCategories(data)}
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col md="6">
-                      <FormGroup className="mb-2">
-                        <Label for="blog-edit-slug">Slug</Label>
-                        <Input
-                          id="blog-edit-slug"
-                          value={slug}
-                          readOnly
-                          onChange={(e) => setSlug(e.target.value)}
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col md="3">
-                      <FormGroup className="mb-2">
-                        <Label for="blog-edit-status">Status</Label>
-                        <Input
-                          type="select"
-                          id="blog-edit-status"
-                          value={status}
-                          onChange={(e) => {
-                            setStatus(e.target.value);
-                            setStock(status === "outStock" ? 0 : stock);
-                          }}
-                        >
-                          <option value="inStock">En stock</option>
-                          <option value="outStock">Fuera de stock</option>
-                        </Input>
-                      </FormGroup>
-                    </Col>
-                    <Col md="3">
-                      <FormGroup className="mb-2">
-                        <Label for="blog-edit-cantidad">
-                          Cantidad Producto
-                        </Label>
-                        <Input
-                          id="blog-edit-cantidad"
-                          value={stock}
-                          readOnly={status === "outStock" ? true : false}
-                          onChange={(e) => {
-                            setStock(e.target.value);
-                          }}
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col sm="12">
-                      <FormGroup className="mb-2">
-                        <Label>Content</Label>
-                        <Editor
-                          editorState={content}
-                          onEditorStateChange={(data) => setContent(data)}
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col className="mb-2" sm="12">
-                      <div className="border rounded p-2">
-                        <h4 className="mb-1">Imagen destacada</h4>
-                        <Media className="flex-column flex-md-row">
-                          <img
-                            className="rounded mr-2 mb-1 mb-md-0"
-                            src={featuredImg}
-                            alt="featured img"
-                            style={{ objectFit: "contain" }}
-                            height="110"
-                          />
-                          <Media body>
-                            <small className="text-muted">
-                              Resolución requerida de la imagen 800x400, tamaño
-                              de la imagen 10mb.
-                            </small>
+              ) : null}
 
-                            <p className="my-50">
-                              <a href="/" onClick={(e) => e.preventDefault()}>
-                                {`C:/fakepath/${imgPath}`}
-                              </a>
-                            </p>
-                            <div className="d-inline-block">
-                              <FormGroup className="mb-0">
-                                <CustomInput
-                                  type="file"
-                                  id="exampleCustomFileBrowser"
-                                  name="customFile"
-                                  onChange={onChange}
-                                  accept=".jpg, .png, .gif"
-                                />
-                              </FormGroup>
-                            </div>
-                          </Media>
+              <Form className="mt-2" onSubmit={(e) => e.preventDefault()}>
+                <Row>
+                  <Col className="mb-2" sm="12">
+                    <div className="border rounded p-2">
+                      <h4 className="mb-1">Imagen destacada</h4>
+                      <Media className="flex-column flex-md-row">
+                        <img
+                          className="rounded mr-2 mb-1 mb-md-0"
+                          src={featuredImg}
+                          alt="featured img"
+                          style={{ objectFit: "contain" }}
+                          height="110"
+                        />
+                        <Media body>
+                          <small className="text-muted">
+                            Resolución requerida de la imagen 800x400, tamaño de
+                            la imagen 10mb.
+                          </small>
+
+                          <p className="my-50">
+                            <a href="/" onClick={(e) => e.preventDefault()}>
+                              {`C:/fakepath/${imgPath}`}
+                            </a>
+                          </p>
+                          <div className="d-inline-block">
+                            <FormGroup className="mb-0">
+                              <CustomInput
+                                type="file"
+                                id="exampleCustomFileBrowser"
+                                name="customFile"
+                                onChange={onChange}
+                                accept=".jpg, .png, .gif"
+                              />
+                            </FormGroup>
+                          </div>
                         </Media>
-                      </div>
-                    </Col>
+                      </Media>
+                    </div>
+                  </Col>
 
-                    <Col sm="12">
-                      <FileUploaderRestrictions />
-                    </Col>
-                    <Col className="mt-50">
-                      <Button.Ripple color="primary" className="mr-1">
-                        Save Changes
-                      </Button.Ripple>
-                      <Button.Ripple color="secondary" outline>
-                        Cancel
-                      </Button.Ripple>
-                    </Col>
-                  </Row>
-                </Form>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      ) : null}
+                  <Col md="6">
+                    <FormGroup className="mb-2">
+                      <Label for="blog-edit-stock">Nombre Producto</Label>
+                      <Input
+                        id="blog-edit-stock"
+                        value={title}
+                        onChange={(e) => {
+                          setTitle(e.target.value);
+                          setSlug(textToSlug(e.target.value));
+                        }}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup className="mb-2">
+                      <Label for="blog-edit-category">Categoria</Label>
+                      <Select
+                        id="blog-edit-category"
+                        isClearable={false}
+                        theme={selectThemeColors}
+                        value={productCategories}
+                        isMulti
+                        name="colors"
+                        options={categories}
+                        className="react-select"
+                        classNamePrefix="select"
+                        onChange={(data) => setProductCategories(data)}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="6">
+                    <FormGroup className="mb-2">
+                      <Label for="blog-edit-slug">Slug</Label>
+                      <Input
+                        id="blog-edit-slug"
+                        value={slug}
+                        readOnly
+                        onChange={(e) => setSlug(e.target.value)}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md="3">
+                    <FormGroup className="mb-2">
+                      <Label for="blog-edit-code">Codigo Articulo</Label>
+                      <Input
+                        id="blog-edit-code"
+                        value={code}
+                        onChange={(e) => {
+                          setCode(e.target.value);
+                        }}
+                      />
+                    </FormGroup>
+                  </Col>
+
+                  <Col md="3">
+                    <FormGroup className="mb-2">
+                      <Label for="blog-edit-size">Genero</Label>
+                      <Select
+                        id="blog-edit-size"
+                        isClearable={false}
+                        theme={selectThemeColors}
+                        value={productGenres}
+                        name="colors"
+                        options={gender}
+                        className="react-select"
+                        classNamePrefix="select"
+                        onChange={(data) => setProductGenres(data)}
+                      />
+                    </FormGroup>
+                  </Col>
+
+                  <Col sm="12">
+                    <VariacionesForm
+                      variations={variations}
+                      setVariations={setVariations}
+                      setTitle={setTitle}
+                    />
+                  </Col>
+                  <Col sm="12">
+                    <FormGroup className="mb-2">
+                      {/* <Label>Descripción</Label> */}
+                      <h4 className="card-title">Descripción del Producto</h4>
+                      <Editor
+                        editorState={content}
+                        onEditorStateChange={(data) => setContent(data)}
+                      />
+                    </FormGroup>
+                  </Col>
+
+                  <Col sm="12">
+                    <ProductsFileUploader files={files} setFiles={setFiles} />
+                  </Col>
+                  {JSON.stringify(files)}
+                  <Col className="mt-50">
+                    <Button.Ripple color="primary" className="mr-1">
+                      Save Changes
+                    </Button.Ripple>
+                    <Button.Ripple color="secondary" outline>
+                      Cancel
+                    </Button.Ripple>
+                  </Col>
+                </Row>
+              </Form>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
     </div>
   );
 };
