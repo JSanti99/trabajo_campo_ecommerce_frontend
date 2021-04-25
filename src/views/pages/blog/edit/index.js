@@ -1,16 +1,11 @@
-import { useState, useEffect } from "react";
-
-// ** Utils
-import { isUserLoggedIn } from "@utils";
-
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { v4 } from "uuid";
+
 import Select from "react-select";
-import Avatar from "@components/avatar";
-import htmlToDraft from "html-to-draftjs";
 import { selectThemeColors } from "@utils";
-import { Editor } from "react-draft-wysiwyg";
+import Avatar from "@components/avatar";
 import Breadcrumbs from "@components/breadcrumbs";
-import { EditorState, ContentState } from "draft-js";
 import {
   Row,
   Col,
@@ -25,68 +20,53 @@ import {
   CustomInput,
   Button,
 } from "reactstrap";
+import { X, Plus } from "react-feather";
 
-import ProductsFileUploader from "./ProductsFileUploader";
-import VariacionesForm from "./Variations";
+import { isUserLoggedIn } from "@utils";
 
-import "@styles/react/libs/editor/editor.scss";
-import "@styles/base/plugins/forms/form-quill-editor.scss";
 import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/base/pages/page-blog.scss";
-
 import "uppy/dist/uppy.css";
-import "@uppy/status-bar/dist/style.css";
-import "@styles/react/libs/file-uploader/file-uploader.scss";
-import "react-slidedown/lib/slidedown.css";
+
+import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 
 const BlogEdit = () => {
-  // ** State
-  const [userData, setUserData] = useState(null);
-
-  const initialContent = `
-  <p>Cupcake ipsum dolor sit. Amet dessert donut candy chocolate bar cotton dessert candy chocolate. Candy muffin danish. Macaroon brownie jelly beans marzipan cheesecake oat cake. Carrot cake macaroon chocolate cake. Jelly brownie jelly. Marzipan pie sweet roll.</p>
-  <p>Liquorice dragée cake chupa chups pie cotton candy jujubes bear claw sesame snaps. Fruitcake chupa chups chocolate bonbon lemon drops croissant caramels lemon drops. Candy jelly cake marshmallow jelly beans dragée macaroon. Gummies sugar plum fruitcake. Candy canes candy cupcake caramels cotton candy jujubes fruitcake.</p>
-  `;
-
-  const contentBlock = htmlToDraft(initialContent);
-  const contentState = ContentState.createFromBlockArray(
-    contentBlock.contentBlocks
+  const { register, control, handleSubmit, reset, watch, getValues } = useForm({
+    defaultValues: {
+      title: "asd",
+      variations: [{ measures: [{ value: "XS", label: "XS" }] }],
+      featuredImg: "",
+      category: {},
+      slug: "",
+    },
+  });
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+    {
+      control,
+      name: "variations",
+    }
   );
-  const editorState = EditorState.createWithContent(contentState);
 
-  const [title, setTitle] = useState(""),
-    [slug, setSlug] = useState(""),
-    [categories, setCategories] = useState([]),
-    [productCategories, setProductCategories] = useState([]),
-    [code, setCode] = useState("AT495AT85UUGCO"),
-    [gender, setGender] = useState([
-      { value: "hombre", label: "Hombre" },
-      { value: "mujer", label: "Mujer" },
-    ]),
-    [productGenres, setProductGenres] = useState([]),
-    [variations, setVariations] = useState([
-      {
-        stock: 0,
-        measures: { value: "XS", label: "XS" },
-        productSizes: [],
-        status: "",
-      },
-    ]),
-    // [stock, setStock] = useState(0),
-    // [status, setStatus] = useState(""),
+  const onSubmit = (data) => console.log("data", data);
 
-    [content, setContent] = useState(editorState),
-    [featuredImg, setFeaturedImg] = useState(null),
-    [imgPath, setImgPath] = useState("banner.jpg"),
-    [files, setFiles] = useState([]);
+  const sizes = [
+    { value: "XS", label: "XS" },
+    { value: "S", label: "S" },
+    { value: "M", label: "M" },
+    { value: "L", label: "L" },
+  ];
+
+  const [userData, setUserData] = useState(null);
+  const [auxFeaturedImg, setAuxFeaturedImg] = useState(null);
+  const [category, setCategory] = useState([]);
 
   useEffect(() => {
     axios.get("/blog/list/data/edit").then((res) => {
-      setFeaturedImg(res.data.featuredImage);
+      setAuxFeaturedImg(res.data.featuredImage);
     });
-    setGender();
-    axios.get("http://localhost:1337/categorias").then((res) => {
-      setCategories(res.data);
+
+    axios.get("http://localhost:1337/category").then((res) => {
+      setCategory(res.data);
     });
 
     if (isUserLoggedIn() !== null) {
@@ -94,36 +74,48 @@ const BlogEdit = () => {
     }
   }, []);
 
-  const onChange = (e) => {
-    const reader = new FileReader(),
-      files = e.target.files;
-    setImgPath(files[0].name);
-    reader.onload = function () {
-      setFeaturedImg(reader.result);
+  const handleImg = (e) => {
+    console.log({ a: e.target.files[0] });
+    var file = e.target.files[0];
+    var reader = new FileReader();
+
+    reader.onloadend = function () {
+      setAuxFeaturedImg(reader.result);
     };
-    reader.readAsDataURL(files[0]);
+
+    if (file) {
+      reader.readAsDataURL(file);
+    } else {
+      setAuxFeaturedImg("");
+    }
   };
 
-  const textToSlug = (text) => {
-    return text
-      .toString()
-      .toLowerCase()
-      .replace(/\s+/g, "-") // Replace spaces with -
-      .replace(/[^\w\-]+/g, "") // Remove all non-word chars
-      .replace(/\-\-+/g, "-") // Replace multiple - with single -
-      .replace(/^-+/, "") // Trim - from start of text
-      .replace(/-+$/, ""); // Trim - from end of text)
+  const handleTitle = (e) => {
+    console.log("a", e.target.value);
+    if (e.target.value) {
+      console.log({ values: getValues() });
+      reset({
+        ...getValues(),
+        slug: e.target.value
+          .toString()
+          .toLowerCase()
+          .replace(/\s+/g, "-") // Replace spaces with -
+          .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+          .replace(/\-\-+/g, "-") // Replace multiple - with single -
+          .replace(/^-+/, "") // Trim - from start of text
+          .replace(/-+$/, ""), // Trim - from end of text)
+      });
+    }
   };
 
   return (
     <div className="blog-edit-wrapper">
       <Breadcrumbs
-        breadCrumbTitle="Blog Edit"
+        breadCrumbTitle="Crear Producto"
         breadCrumbParent="Pages"
-        breadCrumbParent2="Blog"
-        breadCrumbActive="Edit"
+        breadCrumbParent2="Producto"
+        breadCrumbActive="Crear"
       />
-
       <Row>
         <Col sm="12">
           <Card>
@@ -148,8 +140,7 @@ const BlogEdit = () => {
                   </Media>
                 </Media>
               ) : null}
-
-              <Form className="mt-2" onSubmit={(e) => e.preventDefault()}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <Row>
                   <Col className="mb-2" sm="12">
                     <div className="border rounded p-2">
@@ -157,7 +148,7 @@ const BlogEdit = () => {
                       <Media className="flex-column flex-md-row">
                         <img
                           className="rounded mr-2 mb-1 mb-md-0"
-                          src={featuredImg}
+                          src={auxFeaturedImg}
                           alt="featured img"
                           style={{ objectFit: "contain" }}
                           height="110"
@@ -170,128 +161,126 @@ const BlogEdit = () => {
 
                           <p className="my-50">
                             <a href="/" onClick={(e) => e.preventDefault()}>
-                              {`C:/fakepath/${imgPath}`}
+                              {`C:/fakepath/`}
                             </a>
                           </p>
                           <div className="d-inline-block">
-                            <FormGroup className="mb-0">
-                              <CustomInput
-                                type="file"
-                                id="exampleCustomFileBrowser"
-                                name="customFile"
-                                onChange={onChange}
-                                accept=".jpg, .png, .gif"
-                              />
-                            </FormGroup>
+                            <Controller
+                              control={control}
+                              name={"featuredImg"}
+                              render={({
+                                onChange,
+                                onBlur,
+                                value,
+                                name,
+                                ref,
+                              }) => (
+                                <CustomInput
+                                  onChange={handleImg}
+                                  checked={value}
+                                  inputref={ref}
+                                  type="file"
+                                  id="exampleCustomFileBrowser"
+                                  accept=".jpg, .png, .gif"
+                                />
+                              )}
+                            />
                           </div>
                         </Media>
+                        {/* <input
+                          onChange={handleImg}
+                          type="file"
+                          name="featuredImg"
+                          ref={register}
+                        /> */}
                       </Media>
                     </div>
                   </Col>
-
                   <Col md="6">
-                    <FormGroup className="mb-2">
-                      <Label for="blog-edit-stock">Nombre Producto</Label>
-                      <Input
-                        id="blog-edit-stock"
-                        value={title}
-                        onChange={(e) => {
-                          setTitle(e.target.value);
-                          setSlug(textToSlug(e.target.value));
-                        }}
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col md="6">
-                    <FormGroup className="mb-2">
-                      <Label for="blog-edit-category">Categoria</Label>
-                      <Select
-                        id="blog-edit-category"
-                        isClearable={false}
-                        theme={selectThemeColors}
-                        value={productCategories}
-                        isMulti
-                        name="colors"
-                        options={categories}
-                        className="react-select"
-                        classNamePrefix="select"
-                        onChange={(data) => setProductCategories(data)}
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col md="6">
-                    <FormGroup className="mb-2">
-                      <Label for="blog-edit-slug">Slug</Label>
-                      <Input
-                        id="blog-edit-slug"
-                        value={slug}
-                        readOnly
-                        onChange={(e) => setSlug(e.target.value)}
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col md="3">
-                    <FormGroup className="mb-2">
-                      <Label for="blog-edit-code">Codigo Articulo</Label>
-                      <Input
-                        id="blog-edit-code"
-                        value={code}
-                        onChange={(e) => {
-                          setCode(e.target.value);
-                        }}
-                      />
-                    </FormGroup>
-                  </Col>
-
-                  <Col md="3">
-                    <FormGroup className="mb-2">
-                      <Label for="blog-edit-size">Genero</Label>
-                      <Select
-                        id="blog-edit-size"
-                        isClearable={false}
-                        theme={selectThemeColors}
-                        value={productGenres}
-                        name="colors"
-                        options={gender}
-                        className="react-select"
-                        classNamePrefix="select"
-                        onChange={(data) => setProductGenres(data)}
-                      />
-                    </FormGroup>
-                  </Col>
-
-                  <Col sm="12">
-                    <VariacionesForm
-                      variations={variations}
-                      setVariations={setVariations}
-                      setTitle={setTitle}
+                    <Label for="title">Nombre Producto</Label>
+                    <Controller
+                      control={control}
+                      name={`title`}
+                      defaultValue={"title"}
+                      render={({ onChange, onBlur, value, ref }) => (
+                        <Input id="title" onChange={handleTitle} />
+                      )}
                     />
                   </Col>
-                  <Col sm="12">
+                  <Col md="6">
                     <FormGroup className="mb-2">
-                      {/* <Label>Descripción</Label> */}
-                      <h4 className="card-title">Descripción del Producto</h4>
-                      <Editor
-                        editorState={content}
-                        onEditorStateChange={(data) => setContent(data)}
+                      <Label for="category">Categoria</Label>
+                      <Controller
+                        id="category"
+                        as={Select}
+                        control={control}
+                        isClearable={false}
+                        theme={selectThemeColors}
+                        options={category}
+                        className="react-select"
+                        classNamePrefix="select"
+                        name={"category"}
                       />
                     </FormGroup>
                   </Col>
-
-                  <Col sm="12">
-                    <ProductsFileUploader files={files} setFiles={setFiles} />
+                  <Col md="6">
+                    <Label for="slug">Slug</Label>
+                    <Controller control={control} name={`slug`} as={Input} />
                   </Col>
-                  {JSON.stringify(files)}
-                  <Col className="mt-50">
-                    <Button.Ripple color="primary" className="mr-1">
-                      Save Changes
-                    </Button.Ripple>
-                    <Button.Ripple color="secondary" outline>
-                      Cancel
-                    </Button.Ripple>
+                  <Col>
+                    {fields.map((item, index) => {
+                      return (
+                        <Row
+                          key={item.id}
+                          className="justify-content-between align-items-center"
+                        >
+                          <Col md={4}>
+                            <Label for={`size-${index}`}>Tallas</Label>
+                            <Controller
+                              as={Select}
+                              control={control}
+                              options={sizes}
+                              name={`variations[${index}].measures`}
+                              defaultValue={fields[index].measures[0].value}
+                              isMulti
+                              theme={selectThemeColors}
+                              className="react-select"
+                              classNamePrefix="select"
+                            />
+                          </Col>
+
+                          <Col md={2}>
+                            <Button
+                              color="danger"
+                              className="text-nowrap px-1"
+                              outline
+                              onClick={() => remove(index)}
+                            >
+                              <X size={14} className="mr-50" />
+                              <span>Delete</span>
+                            </Button>
+                          </Col>
+                        </Row>
+                      );
+                    })}
                   </Col>
                 </Row>
-              </Form>
+                <section>
+                  <Button.Ripple
+                    type="button"
+                    className="btn-icon"
+                    color="primary"
+                    onClick={() => {
+                      append({ measures: [{ label: "M", value: "M" }] });
+                    }}
+                  >
+                    <Plus size={14} />
+                    <span className="align-middle ml-25">Agregar Variedad</span>
+                  </Button.Ripple>
+                </section>
+
+                <input type="submit" />
+              </form>
             </CardBody>
           </Card>
         </Col>
@@ -299,5 +288,4 @@ const BlogEdit = () => {
     </div>
   );
 };
-
 export default BlogEdit;
