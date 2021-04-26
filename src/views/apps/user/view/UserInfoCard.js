@@ -82,7 +82,7 @@ const UserInfoCard = ({ selectedUser }) => {
                   <div className="user-info mb-1">
                     <h4 className="mb-0">
                       {selectedUser !== null
-                        ? selectedUser.username
+                        ? selectedUser.firstNames + " " + selectedUser.lastNames
                         : "Eleanor Aguilar"}
                     </h4>
                     <CardText tag="span">
@@ -136,7 +136,7 @@ const UserInfoCard = ({ selectedUser }) => {
                     tag="span"
                     className="user-info-title font-weight-bold mb-0"
                   >
-                    Username
+                    Nombre usuario
                   </CardText>
                 </div>
                 <CardText className="mb-0">

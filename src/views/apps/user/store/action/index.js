@@ -27,12 +27,11 @@ export const getData = (params) => {
 };
 
 // ** Get User
-export const getUser = (id) => {
+export const getUser = () => {
   return async (dispatch) => {
     await axios
       .get("http://localhost:1337/users/me")
       .then((response) => {
-        console.log({ response });
         dispatch({
           type: "GET_USER",
           selectedUser: response.data,

@@ -67,6 +67,7 @@ const BlogEdit = () => {
 
   const editorState = EditorState.createWithContent(contentState);
   const defaultCode = "AT495AT85UUGCO";
+
   const gender = [
     { value: "hombre", label: "Hombre" },
     { value: "mujer", label: "Mujer" },
@@ -266,7 +267,9 @@ const BlogEdit = () => {
                       <h4 className="card-title">Descripción del Producto</h4>
                       <Editor
                         editorState={content}
-                        onEditorStateChange={(data) => setContent(data)}
+                        onEditorStateChange={(data) =>
+                          setContent(data.getCurrentContent())
+                        }
                       />
                     </FormGroup>
                   </Col>
