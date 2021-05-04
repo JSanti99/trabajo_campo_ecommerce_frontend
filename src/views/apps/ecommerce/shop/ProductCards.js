@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import classnames from "classnames";
 import { Star, ShoppingCart, Heart } from "react-feather";
 import { Card, CardBody, CardText, Button, Badge } from "reactstrap";
-
+import { v4 } from "uuid";
 const ProductCards = (props) => {
   // ** Props
   const {
@@ -46,7 +46,7 @@ const ProductCards = (props) => {
         const CartBtnTag = item.isInCart ? Link : "button";
 
         return (
-          <Card className="ecommerce-card" key={item.name}>
+          <Card className="ecommerce-card" key={v4()}>
             <div className="item-img text-center mx-auto">
               <Link to={`/apps/ecommerce/product-detail/${item.slug}`}>
                 <img
@@ -96,7 +96,7 @@ const ProductCards = (props) => {
                     href="/"
                     onClick={(e) => e.preventDefault()}
                   >
-                    {item.brand.username}
+                    {item.tienda.companyName}
                   </a>
                 </CardText>
               </h6>

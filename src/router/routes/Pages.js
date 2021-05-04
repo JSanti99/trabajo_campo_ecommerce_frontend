@@ -94,6 +94,11 @@ const PagesRoutes = [
   {
     path: "/pages/profile",
     component: lazy(() => import("../../views/pages/profile")),
+    className: "ecommerce-application",
+    meta: {
+      action: "manage",
+      resource: "TIENDA",
+    },
   },
   {
     path: "/pages/faq",
@@ -163,6 +168,10 @@ const PagesRoutes = [
   {
     path: "/pages/pricing",
     component: lazy(() => import("../../views/pages/pricing")),
+    meta: {
+      action: "read",
+      resource: "ACL",
+    },
   },
   {
     path: "/misc/coming-soon",
@@ -194,6 +203,14 @@ const PagesRoutes = [
     layout: "BlankLayout",
     meta: {
       publicRoute: true,
+    },
+  },
+  {
+    path: "/epayco",
+    component: lazy(() => import("../../views/pages/epayco/EpaycoSubscribe")),
+    meta: {
+      action: "read",
+      resource: "ACL",
     },
   },
 ];

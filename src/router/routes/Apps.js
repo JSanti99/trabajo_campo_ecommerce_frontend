@@ -79,12 +79,18 @@ const AppRoutes = [
     path: "/apps/user/edit",
     exact: true,
     component: () => <Redirect to="/apps/user/edit/1" />,
+    meta: {
+      action: "read",
+      resource: "ACL",
+    },
   },
   {
     path: "/apps/user/edit/:id",
     component: lazy(() => import("../../views/apps/user/edit")),
     meta: {
       navLink: "/apps/user/edit",
+      action: "read",
+      resource: "ACL",
     },
   },
   {

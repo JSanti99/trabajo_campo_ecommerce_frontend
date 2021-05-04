@@ -49,8 +49,10 @@ const UserDropdown = () => {
 
   //** Vars
   const userAvatar = userData
-    ? userData.userImg.url
-      ? `http://localhost:1337${userData.userImg.formats.thumbnail.url}`
+    ? userData.userImg
+      ? userData.userImg.url
+        ? `http://localhost:1337${userData.userImg.url}`
+        : defaultAvatar
       : defaultAvatar
     : defaultAvatar;
 
