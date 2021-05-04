@@ -8,7 +8,7 @@ const themeConfig = {
   },
   layout: {
     isRTL: false,
-    skin: "dark", // light, dark, bordered, semi-dark
+    skin: "semi-dark", // light, dark, bordered, semi-dark
     routerTransition: "fadeIn", // fadeIn, fadeInLeft, zoomIn, none or check this for more transition https://animate.style/
     type: "horizontal", // vertical, horizontal
     contentWidth: "full", // full, boxed
@@ -18,7 +18,7 @@ const themeConfig = {
     },
     navbar: {
       // ? For horizontal menu, navbar type will work for navMenu type
-      type: "floating", // static , sticky , floating, hidden
+      type: "static", // static , sticky , floating, hidden
       backgroundColor: "white", // BS color options [primary, success, etc]
     },
     footer: {
