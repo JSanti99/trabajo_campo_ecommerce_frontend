@@ -81,3 +81,5 @@ export const selectThemeColors = (theme) => ({
     neutral30: "#ededed", // for input hover border-color
   },
 });
+
+export const endpoint = "http://localhost:1337";

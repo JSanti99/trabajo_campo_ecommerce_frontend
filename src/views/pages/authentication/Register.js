@@ -38,6 +38,8 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [valErrors, setValErrors] = useState({});
   const [username, setUsername] = useState("");
+  const [firstNames, setFirstNames] = useState("");
+  const [lastNames, setLastNames] = useState("");
   const [password, setPassword] = useState("");
   const [terms, setTerms] = useState(false);
 
@@ -56,7 +58,7 @@ const Register = () => {
     );
   };
 
-  const onSubmit = () => {
+  const onSubmit = (data) => {
     if (isObjEmpty(errors)) {
       const userAbility = [
         {
@@ -64,8 +66,16 @@ const Register = () => {
           subject: "ACL",
         },
       ];
+      console.log({ data });
       useJwt
-        .register({ username, email, password, ability: userAbility })
+        .register({
+          username,
+          firstNames,
+          lastNames,
+          email,
+          password,
+          ability: userAbility,
+        })
         .then((res) => {
           if (res.data.error) {
             const arr = {};
@@ -98,6 +108,18 @@ const Register = () => {
     const errs = valErrors;
     if (errs.username) delete errs.username;
     setUsername(e.target.value);
+    setValErrors(errs);
+  };
+  const handleFirstNamesChange = (e) => {
+    const errs = valErrors;
+    if (errs.firstNames) delete errs.firstNames;
+    setFirstNames(e.target.value);
+    setValErrors(errs);
+  };
+  const handleLastNamesChange = (e) => {
+    const errs = valErrors;
+    if (errs.lastNames) delete errs.lastNames;
+    setLastNames(e.target.value);
     setValErrors(errs);
   };
 
@@ -158,6 +180,42 @@ const Register = () => {
                 {Object.keys(valErrors).length && valErrors.username ? (
                   <small className="text-danger">{valErrors.username}</small>
                 ) : null}
+              </FormGroup>
+              <FormGroup>
+                <Label className="form-label" for="register-first-name">
+                  Nombres
+                </Label>
+                <Input
+                  id="register-first-names"
+                  name="register-first-names"
+                  className="input-group-merge"
+                  onChange={handleFirstNamesChange}
+                  className={classnames({
+                    "is-invalid": errors["register-first-names"],
+                  })}
+                  innerRef={register({
+                    required: true,
+                    validate: (value) => value !== "",
+                  })}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label className="form-label" for="register-last-names">
+                  Apellidos
+                </Label>
+                <Input
+                  id="register-last-names"
+                  name="register-last-names"
+                  className="input-group-merge"
+                  onChange={handleLastNamesChange}
+                  className={classnames({
+                    "is-invalid": errors["register-last-names"],
+                  })}
+                  innerRef={register({
+                    required: true,
+                    validate: (value) => value !== "",
+                  })}
+                />
               </FormGroup>
               <FormGroup>
                 <Label className="form-label" for="register-email">

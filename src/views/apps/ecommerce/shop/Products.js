@@ -17,6 +17,7 @@ const ProductsPage = (props) => {
     setActiveView,
     store,
     sidebarOpen,
+    id,
     getProducts,
     dispatch,
     addToCart,
@@ -30,11 +31,27 @@ const ProductsPage = (props) => {
   // ** Handles pagination
   const handlePageChange = (val) => {
     if (val === "next") {
-      dispatch(getProducts({ ...store.params, page: store.params.page + 1 }));
+      if (id) {
+        dispatch(
+          getProducts({ id }, { ...store.params, page: store.params.page + 1 })
+        );
+      } else {
+        dispatch(getProducts({ ...store.params, page: store.params.page + 1 }));
+      }
     } else if (val === "prev") {
-      dispatch(getProducts({ ...store.params, page: store.params.page - 1 }));
+      if (id) {
+        dispatch(
+          getProducts({ id }, { ...store.params, page: store.params.page - 1 })
+        );
+      } else {
+        dispatch(getProducts({ ...store.params, page: store.params.page - 1 }));
+      }
     } else {
-      dispatch(getProducts({ ...store.params, page: val }));
+      if (id) {
+        dispatch(getProducts({ id }, { ...store.params, page: val }));
+      } else {
+        dispatch(getProducts({ ...store.params, page: val }));
+      }
     }
   };
 
@@ -45,7 +62,11 @@ const ProductsPage = (props) => {
         ? Number(store.totalProducts) / store.products.length
         : 3;
 
-    return new Array(Math.trunc(arrLength)).fill().map((item, index) => {
+    console.log({ total: store.totalProducts });
+    console.log({ arrLength });
+    console.log(Math.ceil(arrLength));
+
+    return new Array(Math.ceil(arrLength)).fill().map((item, index) => {
       return (
         <PaginationItem
           key={index}
@@ -67,6 +88,12 @@ const ProductsPage = (props) => {
       Number(store.totalProducts) / store.products.length
     ) {
       handlePageChange("next");
+    }
+  };
+
+  const handlePrev = () => {
+    if (store.params.page > 1) {
+      handlePageChange("prev");
     }
   };
 
@@ -108,11 +135,9 @@ const ProductsPage = (props) => {
             />
             <Pagination className="d-flex justify-content-center">
               <PaginationItem
-                disabled={store.params.page === 1}
                 className="prev-item"
-                onClick={() =>
-                  store.params.page !== 1 ? handlePageChange("prev") : null
-                }
+                onClick={() => handlePrev()}
+                disabled={store.params.page === 1}
               >
                 <PaginationLink
                   href="/"

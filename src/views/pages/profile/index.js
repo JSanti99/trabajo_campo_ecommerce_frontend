@@ -1,73 +1,103 @@
-import { Fragment, useState, useEffect } from 'react'
-import axios from 'axios'
-import UILoader from '@components/ui-loader'
-import ProfilePoll from './ProfilePolls'
-import ProfileAbout from './ProfileAbout'
-import ProfilePosts from './ProfilePosts'
-import ProfileHeader from './ProfileHeader'
-import { Row, Col, Button } from 'reactstrap'
-import ProfileTwitterFeeds from './ProfileTwitterFeeds'
-import ProfileLatestPhotos from './ProfileLatestPhotos'
-import ProfileSuggestedPages from './ProfileSuggestedPages'
-import ProfileFriendsSuggestions from './ProfileFriendsSuggestions'
-import Breadcrumbs from '@components/breadcrumbs'
+import { Fragment, useState, useEffect } from "react";
+import axios from "axios";
+import UILoader from "@components/ui-loader";
+import ProfilePoll from "./ProfilePolls";
+import ProfileAbout from "./ProfileAbout";
+import ProfilePosts from "./ProfilePosts";
+import ProfileHeader from "./ProfileHeader";
+import { Row, Col, Button } from "reactstrap";
+import ProfileTwitterFeeds from "./ProfileTwitterFeeds";
+import ProfileLatestPhotos from "./ProfileLatestPhotos";
+import ProfileSuggestedPages from "./ProfileSuggestedPages";
+import ProfileFriendsSuggestions from "./ProfileFriendsSuggestions";
+import Breadcrumbs from "@components/breadcrumbs";
+import Products from "../../apps/ecommerce/shop/Products";
+import Sidebar from "../../apps/ecommerce/shop/Sidebar";
 
-import '@styles/react/pages/page-profile.scss'
+import "@styles/react/pages/page-profile.scss";
+// ** Styles
+import "@styles/base/pages/app-ecommerce.scss";
+
+import { endpoint } from "../../../utility/Utils";
+
+import {
+  addToCart,
+  getProductsTienda,
+  getCartItems,
+  addToWishlist,
+  deleteCartItem,
+  deleteWishlistItem,
+} from "../../apps/ecommerce/store/actions";
+import { useDispatch, useSelector } from "react-redux";
 
 const Profile = () => {
-  const [data, setData] = useState(null)
-  const [block, setBlock] = useState(false)
+  const [data, setData] = useState(null);
+  const [activeView, setActiveView] = useState("grid");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const handleBlock = () => {
-    setBlock(true)
-    setTimeout(() => {
-      setBlock(false)
-    }, 2000)
-  }
+  const dispatch = useDispatch();
+  const store = useSelector((state) => state.ecommerce);
 
   useEffect(() => {
-    axios.get('/profile/data').then(response => setData(response.data))
-  }, [])
+    axios
+      .get(`${endpoint}/users/me`)
+      .then((response) => setData(response.data));
+  }, []);
+
+  useEffect(() => {
+    if (data && data.tienda) {
+      console.log({ data });
+      dispatch(
+        getProductsTienda(
+          { id: data.tienda.id },
+          {
+            page: 1,
+            perPage: 6,
+          }
+        )
+      );
+    }
+  }, [data, dispatch]);
   return (
     <Fragment>
-      <Breadcrumbs breadCrumbTitle='Profile' breadCrumbParent='Pages' breadCrumbActive='Profile' />
+      <Breadcrumbs
+        breadCrumbTitle="Profile"
+        breadCrumbParent="Pages"
+        breadCrumbActive="Profile"
+      />
       {data !== null ? (
-        <div id='user-profile'>
+        <div id="user-profile">
           <Row>
-            <Col sm='12'>
-              <ProfileHeader data={data.header} />
+            <Col sm="12">
+              <ProfileHeader data={data} />
             </Col>
           </Row>
-          <section id='profile-info'>
-            <Row>
-              <Col lg={{ size: 3, order: 1 }} sm={{ size: 12 }} xs={{ order: 2 }}>
-                <ProfileAbout data={data.userAbout} />
-                <ProfileSuggestedPages data={data.suggestedPages} />
-                <ProfileTwitterFeeds data={data.twitterFeeds} />
-              </Col>
-              <Col lg={{ size: 6, order: 2 }} sm={{ size: 12 }} xs={{ order: 1 }}>
-                <ProfilePosts data={data.post} />
-              </Col>
-              <Col lg={{ size: 3, order: 3 }} sm={{ size: 12 }} xs={{ order: 3 }}>
-                <ProfileLatestPhotos data={data.latestPhotos} />
-                <ProfileFriendsSuggestions data={data.suggestions} />
-                <ProfilePoll data={data.polls} />
-              </Col>
-            </Row>
-            <Row>
-              <Col className='text-center' sm='12'>
-                <Button color='primary' className='border-0 mb-1 profile-load-more' size='sm' onClick={handleBlock}>
-                  <UILoader blocking={block} overlayColor='rgba(255,255,255, .5)'>
-                    <span> Load More</span>
-                  </UILoader>
-                </Button>
-              </Col>
-            </Row>
-          </section>
         </div>
       ) : null}
+      {data !== null && data.tienda !== null ? (
+        <Fragment>
+          <Products
+            store={store}
+            dispatch={dispatch}
+            addToCart={addToCart}
+            activeView={activeView}
+            id={data.tienda.id}
+            getProducts={getProductsTienda}
+            sidebarOpen={sidebarOpen}
+            getCartItems={getCartItems}
+            setActiveView={setActiveView}
+            addToWishlist={addToWishlist}
+            setSidebarOpen={setSidebarOpen}
+            deleteCartItem={deleteCartItem}
+            deleteWishlistItem={deleteWishlistItem}
+          />
+          <Sidebar sidebarOpen={sidebarOpen} />
+        </Fragment>
+      ) : (
+        <Button>Crea tu Tienda!</Button>
+      )}
     </Fragment>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

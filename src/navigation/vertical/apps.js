@@ -1,118 +1,129 @@
-import { Mail, MessageSquare, CheckSquare, Calendar, FileText, Circle, ShoppingCart, User } from 'react-feather'
+import {
+  Mail,
+  MessageSquare,
+  CheckSquare,
+  Calendar,
+  FileText,
+  Circle,
+  ShoppingCart,
+  User,
+} from "react-feather";
 
 export default [
   {
-    header: 'Apps & Pages'
+    header: "Apps & Pages",
   },
   {
-    id: 'email',
-    title: 'Email',
+    id: "email",
+    title: "Email",
     icon: <Mail size={20} />,
-    navLink: '/apps/email'
+    navLink: "/apps/email",
   },
   {
-    id: 'chat',
-    title: 'Chat',
+    id: "chat",
+    title: "Chat",
     icon: <MessageSquare size={20} />,
-    navLink: '/apps/chat'
+    navLink: "/apps/chat",
   },
   {
-    id: 'todo',
-    title: 'Todo',
+    id: "todo",
+    title: "Todo",
     icon: <CheckSquare size={20} />,
-    navLink: '/apps/todo'
+    navLink: "/apps/todo",
   },
   {
-    id: 'calendar',
-    title: 'Calendar',
+    id: "calendar",
+    title: "Calendar",
     icon: <Calendar size={20} />,
-    navLink: '/apps/calendar'
+    navLink: "/apps/calendar",
   },
   {
-    id: 'invoiceApp',
-    title: 'Invoice',
+    id: "invoiceApp",
+    title: "Invoice",
     icon: <FileText size={20} />,
     children: [
       {
-        id: 'invoiceList',
-        title: 'List',
+        id: "invoiceList",
+        title: "List",
         icon: <Circle size={12} />,
-        navLink: '/apps/invoice/list'
+        navLink: "/apps/invoice/list",
       },
       {
-        id: 'invoicePreview',
-        title: 'Preview',
+        id: "invoicePreview",
+        title: "Preview",
         icon: <Circle size={12} />,
-        navLink: '/apps/invoice/preview'
+        navLink: "/apps/invoice/preview",
       },
       {
-        id: 'invoiceEdit',
-        title: 'Edit',
+        id: "invoiceEdit",
+        title: "Edit",
         icon: <Circle size={12} />,
-        navLink: '/apps/invoice/edit'
+        navLink: "/apps/invoice/edit",
       },
       {
-        id: 'invoiceAdd',
-        title: 'Add',
+        id: "invoiceAdd",
+        title: "Add",
         icon: <Circle size={12} />,
-        navLink: '/apps/invoice/add'
-      }
-    ]
+        navLink: "/apps/invoice/add",
+      },
+    ],
   },
   {
-    id: 'eCommerce',
-    title: 'eCommerce',
+    id: "eCommerce",
+    title: "eCommerce",
     icon: <ShoppingCart size={20} />,
     children: [
       {
-        id: 'shop',
-        title: 'Shop',
+        id: "shop",
+        title: "Shop",
         icon: <Circle size={12} />,
-        navLink: '/apps/ecommerce/shop'
+        navLink: "/apps/ecommerce/shop",
       },
       {
-        id: 'detail',
-        title: 'Details',
+        id: "detail",
+        title: "Details",
         icon: <Circle size={12} />,
-        navLink: '/apps/ecommerce/product-detail'
+        navLink: "/apps/ecommerce/product-detail",
       },
       {
-        id: 'wishList',
-        title: 'Wish List',
+        id: "wishList",
+        title: "Wish List",
         icon: <Circle size={12} />,
-        navLink: '/apps/ecommerce/wishlist'
+        navLink: "/apps/ecommerce/wishlist",
       },
       {
-        id: 'checkout',
-        title: 'Checkout',
+        id: "checkout",
+        title: "Checkout",
         icon: <Circle size={12} />,
-        navLink: '/apps/ecommerce/checkout'
-      }
-    ]
+        navLink: "/apps/ecommerce/checkout",
+      },
+    ],
   },
   {
-    id: 'users',
-    title: 'User',
+    id: "users",
+    title: "User",
     icon: <User size={20} />,
     children: [
       {
-        id: 'list',
-        title: 'List',
+        id: "list",
+        title: "List",
         icon: <Circle size={12} />,
-        navLink: '/apps/user/list'
+        navLink: "/apps/user/list",
       },
       {
-        id: 'view',
-        title: 'View',
+        id: "view",
+        title: "View",
         icon: <Circle size={12} />,
-        navLink: '/apps/user/view'
+        navLink: "/apps/user/view",
       },
       {
-        id: 'edit',
-        title: 'Edit',
+        id: "edit",
+        title: "Edit",
         icon: <Circle size={12} />,
-        navLink: '/apps/user/edit'
-      }
-    ]
-  }
-]
+        navLink: "/apps/user/edit",
+        action: "read",
+        resource: "ACL",
+      },
+    ],
+  },
+];

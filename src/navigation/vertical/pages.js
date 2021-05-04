@@ -1,4 +1,4 @@
-import { FileText, Circle } from "react-feather";
+import { FileText, Circle, File } from "react-feather";
 export default [
   {
     id: "pages",
@@ -82,6 +82,8 @@ export default [
         permissions: ["admin", "editor"],
         navLink: "/pages/profile",
         collapsed: true,
+        action: "manage",
+        resource: "TIENDA",
       },
       {
         id: "faq",
@@ -107,6 +109,8 @@ export default [
         icon: <Circle size={12} />,
         permissions: ["admin", "editor"],
         navLink: "/pages/pricing",
+        action: "read",
+        resource: "ACL",
       },
       {
         id: "blog",
@@ -221,6 +225,23 @@ export default [
             permissions: ["admin", "editor"],
             navLink: "/misc/error",
             newTab: true,
+          },
+        ],
+      },
+      {
+        id: "epayco",
+        title: "Epayco",
+        icon: <File size={12} />,
+        action: "read",
+        resource: "ACL",
+        children: [
+          {
+            id: "subscribe",
+            title: "Subscribe",
+            icon: <Circle />,
+            navLink: "/epayco",
+            action: "read",
+            resource: "ACL",
           },
         ],
       },

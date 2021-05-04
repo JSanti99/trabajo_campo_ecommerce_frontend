@@ -1,7 +1,9 @@
 import axios from "axios";
+import { endpoint } from "../../../../../utility/Utils";
 
 // ** GET Products
 export const getProducts = (params) => {
+  console.log({ params });
   return (dispatch) => {
     return axios
       .get("http://localhost:1337/productos", { params })
@@ -13,6 +15,20 @@ export const getProducts = (params) => {
           params,
         });
       });
+  };
+};
+export const getProductsTienda = ({ id }, params) => {
+  console.log({ id });
+  return (dispatch) => {
+    return axios
+      .get(`${endpoint}/tiendas/${id}/products`, { params })
+      .then((response) =>
+        dispatch({
+          type: "GET_TIENDA_PRODUCTS",
+          data: response.data,
+          params,
+        })
+      );
   };
 };
 

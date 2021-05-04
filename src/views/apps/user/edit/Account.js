@@ -1,5 +1,6 @@
 // ** React Imports
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 // ** Custom Components
 import Avatar from "@components/avatar";
@@ -18,11 +19,14 @@ import {
   Table,
   CustomInput,
 } from "reactstrap";
+import TokenCard from "../../../pages/epayco/TokenCard";
 
 const UserAccountTab = ({ selectedUser }) => {
   // ** States
   const [img, setImg] = useState(null);
   const [userData, setUserData] = useState(null);
+  const [doc_type, setDocType] = useState("CC");
+  const [doc_number, setDocNumber] = useState(0);
 
   // ** Function to change user image
   const onChange = (e) => {
@@ -32,6 +36,19 @@ const UserAccountTab = ({ selectedUser }) => {
       setImg(reader.result);
     };
     reader.readAsDataURL(files[0]);
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log({ doc_type, doc_number });
+    axios
+      .put(`http://localhost:1337/users/${selectedUser.id}`, {
+        docType: doc_type,
+        docNumber: doc_number,
+      })
+      .then((user) =>
+        localStorage.setItem("userData", JSON.stringify(user.data))
+      );
   };
 
   // ** Update user image on mount or change
@@ -97,133 +114,96 @@ const UserAccountTab = ({ selectedUser }) => {
   };
 
   return (
-    <Row>
-      <Col sm="12">
-        <Media className="mb-2">
-          {renderUserAvatar()}
-          <Media className="mt-50" body>
-            <h4>{selectedUser.fullName} </h4>
-            <div className="d-flex flex-wrap mt-1 px-0">
-              <Button.Ripple
-                id="change-img"
-                tag={Label}
-                className="mr-75 mb-0"
-                color="primary"
-              >
-                <span className="d-none d-sm-block">Change</span>
-                <span className="d-block d-sm-none">
-                  <Edit size={14} />
-                </span>
-                <input
-                  type="file"
-                  hidden
+    <>
+      <Row>
+        <Col sm={12}>
+          <TokenCard userData={userData} />
+        </Col>
+      </Row>
+      <hr />
+      <Row>
+        <Col sm="12">
+          <Media className="mb-2">
+            {renderUserAvatar()}
+            <Media className="mt-50" body>
+              <h4>{selectedUser.fullName} </h4>
+              <div className="d-flex flex-wrap mt-1 px-0">
+                <Button.Ripple
                   id="change-img"
-                  onChange={onChange}
-                  accept="image/*"
-                />
-              </Button.Ripple>
-              <Button.Ripple color="secondary" outline>
-                <span className="d-none d-sm-block">Remove</span>
-                <span className="d-block d-sm-none">
-                  <Trash2 size={14} />
-                </span>
-              </Button.Ripple>
-            </div>
+                  tag={Label}
+                  className="mr-75 mb-0"
+                  color="primary"
+                >
+                  <span className="d-none d-sm-block">Change</span>
+                  <span className="d-block d-sm-none">
+                    <Edit size={14} />
+                  </span>
+                  <input
+                    type="file"
+                    hidden
+                    id="change-img"
+                    onChange={onChange}
+                    accept="image/*"
+                  />
+                </Button.Ripple>
+                <Button.Ripple color="secondary" outline>
+                  <span className="d-none d-sm-block">Remove</span>
+                  <span className="d-block d-sm-none">
+                    <Trash2 size={14} />
+                  </span>
+                </Button.Ripple>
+              </div>
+            </Media>
           </Media>
-        </Media>
-      </Col>
-      <Col sm="12">
-        <Form onSubmit={(e) => e.preventDefault()}>
-          <Row>
-            <Col md="4" sm="12">
-              <FormGroup>
-                <Label for="username">Username</Label>
-                <Input
-                  type="text"
-                  id="username"
-                  placeholder="Username"
-                  defaultValue={userData && userData.username}
-                />
-              </FormGroup>
-            </Col>
-            <Col md="4" sm="12">
-              <FormGroup>
-                <Label for="name">Name</Label>
-                <Input
-                  type="text"
-                  id="name"
-                  placeholder="Name"
-                  defaultValue={userData && userData.firstName}
-                />
-              </FormGroup>
-            </Col>
-            <Col md="4" sm="12">
-              <FormGroup>
-                <Label for="email">Email</Label>
-                <Input
-                  type="text"
-                  id="email"
-                  placeholder="Email"
-                  defaultValue={userData && userData.email}
-                />
-              </FormGroup>
-            </Col>
-            {/* <Col md="4" sm="12">
-              <FormGroup>
-                <Label for="status">Status</Label>
-                <Input
-                  type="select"
-                  name="status"
-                  id="status"
-                  defaultValue={userData && userData.status}
+        </Col>
+        <Col sm="12">
+          <Form onSubmit={onSubmit}>
+            <Row>
+              <Col md="4" sm="12">
+                <FormGroup>
+                  <Label for="doc_type">Documento</Label>
+                  <Input
+                    type="select"
+                    name="doc_type"
+                    id="doc_type"
+                    value={doc_type}
+                    onChange={(e) => setDocType(e.target.value)}
+                  >
+                    <option value="CC">Cedula de ciudadania</option>
+                    <option value="TI">Tarjeta de identidad</option>
+                  </Input>
+                </FormGroup>
+              </Col>
+              <Col md="4" sm="12">
+                <FormGroup>
+                  <Label for="doc_number">Numero de documento</Label>
+                  <Input
+                    type="number"
+                    id="doc_number"
+                    placeholder="doc_number"
+                    value={doc_number}
+                    onChange={(e) => setDocNumber(e.target.value)}
+                  />
+                </FormGroup>
+              </Col>
+
+              <Col className="d-flex flex-sm-row flex-column mt-2" sm="12">
+                <Button.Ripple
+                  className="mb-1 mb-sm-0 mr-0 mr-sm-1"
+                  type="submit"
+                  color="primary"
                 >
-                  <option value="pending">Pending</option>
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </Input>
-              </FormGroup>
-            </Col> */}
-            <Col md="4" sm="12">
-              <FormGroup>
-                <Label for="role">Role</Label>
-                <Input
-                  type="select"
-                  name="role"
-                  id="role"
-                  defaultValue={userData && userData.role.type}
-                >
-                  <option value="cliente">Cliente</option>
-                  <option value="comerciante">Comerciante</option>
-                </Input>
-              </FormGroup>
-            </Col>
-            {/* <Col md="4" sm="12">
-              <FormGroup>
-                <Label for="company">Company</Label>
-                <Input
-                  type="text"
-                  id="company"
-                  defaultValue={userData && userData.company}
-                  placeholder="WinDon Technologies Pvt Ltd"
-                />
-              </FormGroup>
-            </Col> */}
-            <Col className="d-flex flex-sm-row flex-column mt-2" sm="12">
-              <Button.Ripple
-                className="mb-1 mb-sm-0 mr-0 mr-sm-1"
-                type="submit"
-                color="primary"
-              >
-                Save Changes
-              </Button.Ripple>
-              <Button.Ripple color="secondary" outline>
-                Reset
-              </Button.Ripple>
-            </Col>
-          </Row>
-        </Form>
-      </Col>
-    </Row>
+                  Save Changes
+                </Button.Ripple>
+                <Button.Ripple color="secondary" outline>
+                  Reset
+                </Button.Ripple>
+              </Col>
+            </Row>
+          </Form>
+        </Col>
+      </Row>
+    </>
   );
 };
 export default UserAccountTab;
