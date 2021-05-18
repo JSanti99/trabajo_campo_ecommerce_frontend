@@ -45,11 +45,11 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    if (data && data.tienda) {
+    if (data && data.brand) {
       console.log({ data });
       dispatch(
         getProductsTienda(
-          { id: data.tienda.id },
+          { id: data.brand.id },
           {
             page: 1,
             perPage: 6,
@@ -74,14 +74,14 @@ const Profile = () => {
           </Row>
         </div>
       ) : null}
-      {data !== null && data.tienda !== null ? (
+      {data !== null && data.brand !== null ? (
         <Fragment>
           <Products
             store={store}
             dispatch={dispatch}
             addToCart={addToCart}
             activeView={activeView}
-            id={data.tienda.id}
+            id={data.brand.id}
             getProducts={getProductsTienda}
             sidebarOpen={sidebarOpen}
             getCartItems={getCartItems}

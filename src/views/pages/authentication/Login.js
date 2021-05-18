@@ -70,7 +70,6 @@ const Login = (props) => {
       useJwt
         .login({ identifier: email, password })
         .then((res) => {
-          console.log(res.data.userData);
           const data = {
             ...res.data.user,
             accessToken: res.data.jwt,
@@ -78,7 +77,6 @@ const Login = (props) => {
           };
           dispatch(handleLogin(data));
           ability.update(res.data.user.ability);
-          console.log(res.data);
 
           history.push(getHomeRouteForLoggedInUser(data.role.type));
           toast.success(

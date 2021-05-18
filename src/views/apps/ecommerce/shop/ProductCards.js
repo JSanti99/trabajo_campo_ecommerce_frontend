@@ -1,6 +1,6 @@
 // ** React Imports
 import { Link } from "react-router-dom";
-
+import { MarkdownPreview } from "react-marked-markdown";
 // ** Third Party Components
 import classnames from "classnames";
 import { Star, ShoppingCart, Heart } from "react-feather";
@@ -96,12 +96,12 @@ const ProductCards = (props) => {
                     href="/"
                     onClick={(e) => e.preventDefault()}
                   >
-                    {item.tienda.companyName}
+                    {item.brand.companyName}
                   </a>
                 </CardText>
               </h6>
               <CardText className="item-description">
-                {item.description}
+                <MarkdownPreview value={item.description} />
               </CardText>
             </CardBody>
             <div className="item-options text-center">

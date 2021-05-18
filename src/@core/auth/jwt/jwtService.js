@@ -45,7 +45,6 @@ export default class JwtService {
           if (!this.isAlreadyFetchingAccessToken) {
             this.isAlreadyFetchingAccessToken = true;
             this.refreshToken().then((r) => {
-              console.log("R", r);
               this.isAlreadyFetchingAccessToken = false;
 
               // ** Update accessToken in localStorage
@@ -60,7 +59,6 @@ export default class JwtService {
               // ** Make sure to assign accessToken according to your response.
               // ** Check: https://pixinvent.ticksy.com/ticket/2413870
               // ** Change Authorization header
-              console.log(accessToken);
               originalRequest.headers.Authorization = `${this.jwtConfig.tokenType} ${accessToken}`;
               resolve(axios(originalRequest));
             });

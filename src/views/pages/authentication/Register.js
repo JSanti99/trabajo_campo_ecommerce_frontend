@@ -66,7 +66,7 @@ const Register = () => {
           subject: "ACL",
         },
       ];
-      console.log({ data });
+
       useJwt
         .register({
           username,
@@ -90,7 +90,6 @@ const Register = () => {
               console.error(res.data.error.username);
           } else {
             setValErrors({});
-            console.log({ res });
             const data = {
               ...res.data.user,
               accessToken: res.data.jwt,
