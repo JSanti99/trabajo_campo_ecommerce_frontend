@@ -25,14 +25,13 @@ const ProfileHeader = ({ data }) => {
   useEffect(() => {
     if (data.ability) {
       data.ability.map((a) => {
-        console.log({ a });
-        console.log({ ability: ability.can(a.action, a.subject) });
         if (ability.can(a.action, a.subject)) {
           setPermiso(true);
         }
       });
     }
   }, []);
+  if (!data.tienda) return <div>No tienes tienda</div>;
 
   return (
     <Card className="profile-header mb-2">

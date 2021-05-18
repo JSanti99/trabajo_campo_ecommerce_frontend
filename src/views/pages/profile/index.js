@@ -18,7 +18,7 @@ import "@styles/react/pages/page-profile.scss";
 // ** Styles
 import "@styles/base/pages/app-ecommerce.scss";
 
-import { endpoint } from "../../../utility/Utils";
+import { endpoint, _limit, _start } from "../../../utility/Utils";
 
 import {
   addToCart,
@@ -46,13 +46,13 @@ const Profile = () => {
 
   useEffect(() => {
     if (data && data.tienda) {
-      console.log({ data });
+      console.log({ id: data.tienda.id });
       dispatch(
         getProductsTienda(
           { id: data.tienda.id },
           {
-            page: 1,
-            perPage: 6,
+            _start,
+            _limit,
           }
         )
       );
@@ -74,7 +74,7 @@ const Profile = () => {
           </Row>
         </div>
       ) : null}
-      {data !== null && data.tienda !== null ? (
+      {data && data.tienda ? (
         <Fragment>
           <Products
             store={store}
@@ -91,7 +91,13 @@ const Profile = () => {
             deleteCartItem={deleteCartItem}
             deleteWishlistItem={deleteWishlistItem}
           />
-          <Sidebar sidebarOpen={sidebarOpen} />
+          <Sidebar
+            id={data.tienda.id}
+            store={store}
+            dispatch={dispatch}
+            getProducts={getProductsTienda}
+            sidebarOpen={sidebarOpen}
+          />
         </Fragment>
       ) : (
         <Button>Crea tu Tienda!</Button>
