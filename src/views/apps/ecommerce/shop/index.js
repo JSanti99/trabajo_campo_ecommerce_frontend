@@ -21,6 +21,7 @@ import {
 
 // ** Styles
 import "@styles/base/pages/app-ecommerce.scss";
+import { _limit, _start } from "../../../../utility/Utils";
 
 const Shop = () => {
   // ** States
@@ -35,8 +36,8 @@ const Shop = () => {
   useEffect(() => {
     dispatch(
       getProducts({
-        page: 1,
-        perPage: 6,
+        _start,
+        _limit,
       })
     );
   }, [dispatch]);
@@ -62,7 +63,12 @@ const Shop = () => {
         deleteCartItem={deleteCartItem}
         deleteWishlistItem={deleteWishlistItem}
       />
-      <Sidebar sidebarOpen={sidebarOpen} />
+      <Sidebar
+        store={store}
+        dispatch={dispatch}
+        getProducts={getProducts}
+        sidebarOpen={sidebarOpen}
+      />
     </Fragment>
   );
 };

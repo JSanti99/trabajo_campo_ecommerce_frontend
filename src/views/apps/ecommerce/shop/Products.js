@@ -9,6 +9,7 @@ import ProductsSearchbar from "./ProductsSearchbar";
 // ** Third Party Components
 import classnames from "classnames";
 import { Pagination, PaginationItem, PaginationLink } from "reactstrap";
+import { _limit } from "../../../../utility/Utils";
 
 const ProductsPage = (props) => {
   // ** Props
@@ -33,24 +34,34 @@ const ProductsPage = (props) => {
     if (val === "next") {
       if (id) {
         dispatch(
-          getProducts({ id }, { ...store.params, page: store.params.page + 1 })
+          getProducts(
+            { id },
+            { ...store.params, _start: store.params._start + _limit }
+          )
         );
       } else {
-        dispatch(getProducts({ ...store.params, page: store.params.page + 1 }));
+        dispatch(
+          getProducts({ ...store.params, _start: store.params._start + _limit })
+        );
       }
     } else if (val === "prev") {
       if (id) {
         dispatch(
-          getProducts({ id }, { ...store.params, page: store.params.page - 1 })
+          getProducts(
+            { id },
+            { ...store.params, _start: store.params._start - _limit }
+          )
         );
       } else {
-        dispatch(getProducts({ ...store.params, page: store.params.page - 1 }));
+        dispatch(
+          getProducts({ ...store.params, _start: store.params._start - _limit })
+        );
       }
     } else {
       if (id) {
-        dispatch(getProducts({ id }, { ...store.params, page: val }));
+        dispatch(getProducts({ id }, { ...store.params, _start: val }));
       } else {
-        dispatch(getProducts({ ...store.params, page: val }));
+        dispatch(getProducts({ ...store.params, _start: val }));
       }
     }
   };
@@ -61,17 +72,12 @@ const ProductsPage = (props) => {
       store.totalProducts !== 0 && store.products.length !== 0
         ? Number(store.totalProducts) / store.products.length
         : 3;
-
-    console.log({ total: store.totalProducts });
-    console.log({ arrLength });
-    console.log(Math.ceil(arrLength));
-
     return new Array(Math.ceil(arrLength)).fill().map((item, index) => {
       return (
         <PaginationItem
           key={index}
-          active={store.params.page === index + 1}
-          onClick={() => handlePageChange(index + 1)}
+          active={store.params._start === index + _limit}
+          onClick={() => handlePageChange(index + _limit)}
         >
           <PaginationLink href="/" onClick={(e) => e.preventDefault()}>
             {index + 1}
@@ -84,7 +90,7 @@ const ProductsPage = (props) => {
   // ** handle next page click
   const handleNext = () => {
     if (
-      store.params.page !==
+      store.params._start !==
       Number(store.totalProducts) / store.products.length
     ) {
       handlePageChange("next");
@@ -92,7 +98,7 @@ const ProductsPage = (props) => {
   };
 
   const handlePrev = () => {
-    if (store.params.page > 1) {
+    if (store.params._start > 1) {
       handlePageChange("prev");
     }
   };
@@ -115,6 +121,7 @@ const ProductsPage = (props) => {
           onClick={() => setSidebarOpen(false)}
         ></div>
         <ProductsSearchbar
+          id={id}
           dispatch={dispatch}
           getProducts={getProducts}
           store={store}
@@ -137,7 +144,7 @@ const ProductsPage = (props) => {
               <PaginationItem
                 className="prev-item"
                 onClick={() => handlePrev()}
-                disabled={store.params.page === 1}
+                disabled={store.params._start <= 0}
               >
                 <PaginationLink
                   href="/"
@@ -149,7 +156,7 @@ const ProductsPage = (props) => {
                 className="next-item"
                 onClick={() => handleNext()}
                 disabled={
-                  store.params.page ===
+                  store.params._start ===
                   Number(store.totalProducts) / store.products.length
                 }
               >

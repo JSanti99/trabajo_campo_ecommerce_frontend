@@ -27,6 +27,7 @@
     "chroma-js": "2.1.0",
     "classnames": "2.2.6",
     "cleave.js": "1.6.0",
+    "dayjs": "^1.10.4",
     "draft-js": "0.11.7",
     "draftjs-to-html": "0.9.1",
     "epayco-sdk-node": "^1.0.7",

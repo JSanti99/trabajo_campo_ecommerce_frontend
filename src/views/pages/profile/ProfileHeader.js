@@ -31,6 +31,7 @@ const ProfileHeader = ({ data }) => {
       });
     }
   }, []);
+  if (!data.tienda) return <div>No tienes tienda</div>;
 
   return (
     <Card className="profile-header mb-2">

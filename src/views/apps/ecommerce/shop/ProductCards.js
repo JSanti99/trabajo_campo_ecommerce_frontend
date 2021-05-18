@@ -96,7 +96,7 @@ const ProductCards = (props) => {
                     href="/"
                     onClick={(e) => e.preventDefault()}
                   >
-                    {item.brand.companyName}
+                    {item.tienda?.companyName}
                   </a>
                 </CardText>
               </h6>
