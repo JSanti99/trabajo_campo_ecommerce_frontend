@@ -78,7 +78,6 @@ const Router = () => {
    */
   const FinalRoute = (props) => {
     const route = props.route;
-    console.log({ route });
     let action, resource;
 
     // ** Assign vars based on route meta
@@ -86,7 +85,6 @@ const Router = () => {
       action = route.meta.action ? route.meta.action : null;
       resource = route.meta.resource ? route.meta.resource : null;
     }
-    console.log({ action, resource });
     if (
       (!isUserLoggedIn() && route.meta === undefined) ||
       (!isUserLoggedIn() &&

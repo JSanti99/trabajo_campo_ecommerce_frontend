@@ -34,7 +34,7 @@ const ProgressToast = ({ status }) => (
           color={status == "success" ? "success" : "danger"}
           icon={<Check size={12} />}
         />
-        {console.log("estado", { status })}
+
         <h6 className="toast-title">
           {status == "success"
             ? "Contraseña restablecida satisfactoriamente!"
@@ -78,14 +78,13 @@ const ResetPasswordV2 = (props) => {
       useJwt
         .reset({ code, password, passwordConfirmation })
         .then((res) => {
-          console.log(res.data.userData);
           const data = {
             ...res.data.user,
             accessToken: res.data.jwt,
             refreshToken: res.data.refreshToken,
           };
           dispatch(handleLogin(data));
-          console.log(res.data.user);
+
           ability.update(res.data.user.ability);
           history.push(getHomeRouteForLoggedInUser(data.role.type));
           toast.success(

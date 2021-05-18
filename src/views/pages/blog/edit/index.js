@@ -183,9 +183,8 @@ const BlogEdit = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log({ data });
     let variationsAux = [];
-    console.log(featuredImg, auxFeaturedImg);
+
     data.variations.map((variation) => {
       variationsAux.push({
         talla: variation.sizes.value,

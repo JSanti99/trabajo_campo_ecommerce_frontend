@@ -1,49 +1,60 @@
 // ** React Imports
-import { useEffect, Fragment } from 'react'
-import { useParams } from 'react-router-dom'
+import { useEffect, Fragment } from "react";
+import { useParams } from "react-router-dom";
 
 // ** Product detail components
-import ItemFeatures from './ItemFeatures'
-import ProductDetails from './ProductDetails'
-import RelatedProducts from './RelatedProducts'
+import ItemFeatures from "./ItemFeatures";
+import ProductDetails from "./ProductDetails";
+import RelatedProducts from "./RelatedProducts";
 
 // ** Custom Components
-import BreadCrumbs from '@components/breadcrumbs'
+import BreadCrumbs from "@components/breadcrumbs";
 
 // ** Third Party Components
-import { Card, CardBody } from 'reactstrap'
+import { Card, CardBody } from "reactstrap";
 
 // ** Store & Actions
-import { useDispatch, useSelector } from 'react-redux'
-import { getProduct, deleteWishlistItem, addToWishlist, addToCart } from '../store/actions'
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getProduct,
+  deleteWishlistItem,
+  addToWishlist,
+  addToCart,
+} from "../store/actions";
 
-import '@styles/base/pages/app-ecommerce-details.scss'
+import "@styles/base/pages/app-ecommerce-details.scss";
 
 const Details = () => {
   // ** Vars
-  const params = useParams().product
-  const productId = params.substring(params.lastIndexOf('-') + 1)
+  const params = useParams().product;
+  const productSlug = params;
+  console.log(params);
 
   // ** Store Vars
-  const dispatch = useDispatch()
-  const store = useSelector(state => state.ecommerce)
+  const dispatch = useDispatch();
+  const store = useSelector((state) => state.ecommerce);
 
   // ** ComponentDidMount : Get product
   useEffect(() => {
-    dispatch(getProduct(productId))
-  }, [])
+    dispatch(getProduct(productSlug));
+  }, []);
 
+  console.log(store);
   return (
     <Fragment>
-      <BreadCrumbs breadCrumbTitle='Product Details' breadCrumbParent='eCommerce' breadCrumbActive='Details' />
-      <div className='app-ecommerce-details'>
+      <BreadCrumbs
+        breadCrumbTitle="Detalles del producto"
+        breadCrumbParent="eCommerce"
+        breadCrumbActive="Detalles"
+      />
+      <div className="app-ecommerce-details">
         {Object.keys(store.productDetail).length ? (
           <Card>
             <CardBody>
               <ProductDetails
                 dispatch={dispatch}
                 addToCart={addToCart}
-                productId={productId}
+                productId={productSlug}
                 getProduct={getProduct}
                 data={store.productDetail}
                 addToWishlist={addToWishlist}
@@ -58,7 +69,7 @@ const Details = () => {
         ) : null}
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
-export default Details
+export default Details;

@@ -25,8 +25,6 @@ const ProfileHeader = ({ data }) => {
   useEffect(() => {
     if (data.ability) {
       data.ability.map((a) => {
-        console.log({ a });
-        console.log({ ability: ability.can(a.action, a.subject) });
         if (ability.can(a.action, a.subject)) {
           setPermiso(true);
         }
@@ -38,9 +36,9 @@ const ProfileHeader = ({ data }) => {
     <Card className="profile-header mb-2">
       <CardImg
         src={
-          data.tienda
-            ? data.tienda.coverImg
-              ? `${endpoint}${data.tienda.coverImg.url}`
+          data.brand
+            ? data.brand.coverImg
+              ? `${endpoint}${data.brand.coverImg.url}`
               : defaultBanner
             : defaultBanner
         }
@@ -61,7 +59,7 @@ const ProfileHeader = ({ data }) => {
           </div>
           <div className="profile-title ml-3">
             <h2 className="text-white">
-              {data.tienda?.companyName || data.username}
+              {data.brand?.companyName || data.username}
             </h2>
             <p className="text-white">{data.designation}</p>
           </div>
