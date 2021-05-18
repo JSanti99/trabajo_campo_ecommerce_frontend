@@ -41,12 +41,16 @@ export default [
     id: "invoiceApp",
     title: "Invoice",
     icon: <FileText size={20} />,
+    action: "manage",
+    resource: "TIENDA",
     children: [
       {
         id: "invoiceList",
         title: "List",
         icon: <Circle size={12} />,
         navLink: "/apps/invoice/list",
+        action: "manage",
+        resource: "TIENDA",
       },
       {
         id: "invoicePreview",
@@ -72,18 +76,24 @@ export default [
     id: "eCommerce",
     title: "eCommerce",
     icon: <ShoppingCart size={20} />,
+    action: "read",
+    resource: "ACL",
     children: [
       {
         id: "shop",
         title: "Shop",
         icon: <Circle size={12} />,
         navLink: "/apps/ecommerce/shop",
+        action: "read",
+        resource: "ACL",
       },
       {
         id: "detail",
         title: "Details",
         icon: <Circle size={12} />,
         navLink: "/apps/ecommerce/product-detail",
+        action: "read",
+        resource: "ACL",
       },
       {
         id: "wishList",

@@ -1,30 +1,32 @@
-import axios from 'axios'
+import axios from "axios";
 
 // ** Get data
-export const getData = params => {
-  return dispatch => {
-    axios.get('/apps/invoice/invoices', params).then(response => {
+export const getData = (params) => {
+  console.log({ params });
+  return (dispatch) => {
+    axios.get("http://localhost:1337/facturas", { params }).then((response) => {
+      console.log({ response });
       dispatch({
-        type: 'GET_DATA',
+        type: "GET_DATA",
         allData: response.data.allData,
         data: response.data.invoices,
         totalPages: response.data.total,
-        params
-      })
-    })
-  }
-}
+        params,
+      });
+    });
+  };
+};
 
 // ** Delete Invoice
-export const deleteInvoice = id => {
+export const deleteInvoice = (id) => {
   return (dispatch, getStore) => {
     axios
-      .delete('/apps/invoice/delete', { id })
-      .then(response => {
+      .delete("/apps/invoice/delete", { id })
+      .then((response) => {
         dispatch({
-          type: 'DELETE_INVOICE'
-        })
+          type: "DELETE_INVOICE",
+        });
       })
-      .then(() => dispatch(getData(getStore().invoice.params)))
-  }
-}
+      .then(() => dispatch(getData(getStore().invoice.params)));
+  };
+};

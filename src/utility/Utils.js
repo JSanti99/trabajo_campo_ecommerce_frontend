@@ -83,3 +83,6 @@ export const selectThemeColors = (theme) => ({
 });
 
 export const endpoint = "http://localhost:1337";
+
+export const _start = 0;
+export const _limit = 6;
