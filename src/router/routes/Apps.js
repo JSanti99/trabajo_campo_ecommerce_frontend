@@ -84,6 +84,11 @@ const AppRoutes = [
     path: "/apps/ecommerce/checkout",
     className: "ecommerce-application",
     component: lazy(() => import("../../views/apps/ecommerce/checkout")),
+    meta: {
+      navLink: "/apps/ecommerce/checkout",
+      action: "read",
+      resource: "ACL",
+    },
   },
   {
     path: "/apps/user/list",
@@ -111,12 +116,19 @@ const AppRoutes = [
     path: "/apps/user/view",
     exact: true,
     component: () => <Redirect to="/apps/user/view/1" />,
+    meta: {
+      navLink: "/apps/user/view",
+      action: "read",
+      resource: "ACL",
+    },
   },
   {
     path: "/apps/user/view/:id",
     component: lazy(() => import("../../views/apps/user/view")),
     meta: {
       navLink: "/apps/user/view",
+      action: "manage",
+      resource: "TIENDA",
     },
   },
 ];

@@ -46,7 +46,6 @@ const Profile = () => {
 
   useEffect(() => {
     if (data && data.tienda) {
-      console.log({ id: data.tienda.id });
       dispatch(
         getProductsTienda(
           { id: data.brand.id },
@@ -58,6 +57,7 @@ const Profile = () => {
       );
     }
   }, [data, dispatch]);
+
   return (
     <Fragment>
       <Breadcrumbs
@@ -100,7 +100,21 @@ const Profile = () => {
           />
         </Fragment>
       ) : (
-        <Button>Crea tu Tienda!</Button>
+        <Button
+          onClick={(e) => {
+            console.log(data);
+            axios
+              .post("http://localhost:1337/tiendas", {
+                user: data,
+                companyName: "test name",
+              })
+              .then((res) => {
+                // window.location.reload();
+              });
+          }}
+        >
+          Crea tu Tienda!
+        </Button>
       )}
     </Fragment>
   );

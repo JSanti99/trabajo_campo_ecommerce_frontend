@@ -106,6 +106,8 @@ export default [
         title: "Checkout",
         icon: <Circle size={12} />,
         navLink: "/apps/ecommerce/checkout",
+        action: "read",
+        resource: "ACL",
       },
     ],
   },
@@ -125,6 +127,8 @@ export default [
         title: "View",
         icon: <Circle size={12} />,
         navLink: "/apps/user/view",
+        action: "manage",
+        resource: "TIENDA",
       },
       {
         id: "edit",
