@@ -105,7 +105,12 @@ const Sidebar = (props) => {
                       label="All"
                       onChange={() => {
                         if (id) {
-                          dispatch(getProducts({ id }, { ...deleteParams() }));
+                          dispatch(
+                            getProducts(
+                              { id },
+                              { ...deleteParams(), "_where[0][brand.id]": id }
+                            )
+                          );
                         } else {
                           dispatch(
                             getProducts({
@@ -131,6 +136,7 @@ const Sidebar = (props) => {
                               {
                                 ...deleteParams(),
                                 "_where[0][price_lt]": 10,
+                                "_where[0][brand.id]": id,
                               }
                             )
                           );
@@ -160,6 +166,7 @@ const Sidebar = (props) => {
                                 ...deleteParams(),
                                 "_where[0][price_gt]": 10,
                                 "_where[0][price_lt]": 100,
+                                "_where[0][brand.id]": id,
                               }
                             )
                           );
@@ -190,6 +197,7 @@ const Sidebar = (props) => {
                                 ...deleteParams(),
                                 "_where[0][price_gt]": 100,
                                 "_where[0][price_lt]": 500,
+                                "_where[0][brand.id]": id,
                               }
                             )
                           );
@@ -219,6 +227,7 @@ const Sidebar = (props) => {
                               {
                                 ...deleteParams(),
                                 "_where[0][price_gt]": 500,
+                                "_where[0][brand.id]": id,
                               }
                             )
                           );
@@ -260,6 +269,7 @@ const Sidebar = (props) => {
                               ...deleteParams(),
                               "_where[0][price_gt]": data[0],
                               "_where[0][price_lt]": data[1],
+                              "_where[0][brand.id]": id,
                             }
                           )
                         );
@@ -298,6 +308,7 @@ const Sidebar = (props) => {
                                       ...deleteParams(),
                                       "_where[0][category.label_in]":
                                         category.title,
+                                      "_where[0][brand.id]": id,
                                     }
                                   )
                                 );
@@ -398,6 +409,7 @@ const Sidebar = (props) => {
                           { id },
                           {
                             ...deleteParams(),
+                            "_where[0][brand.id]": id,
                           }
                         )
                       );

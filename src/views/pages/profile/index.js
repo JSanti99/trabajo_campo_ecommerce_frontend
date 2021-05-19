@@ -52,6 +52,7 @@ const Profile = () => {
           {
             _start,
             _limit,
+            "_where[0][brand.id]": data.brand.id,
           }
         )
       );

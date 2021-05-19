@@ -2,7 +2,7 @@ import { FileText, Circle, File } from "react-feather";
 export default [
   {
     id: "pages",
-    title: "Pages",
+    title: "Tienda",
     icon: <FileText size={20} />,
     children: [
       {

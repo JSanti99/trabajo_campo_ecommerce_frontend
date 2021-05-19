@@ -28,6 +28,7 @@ const ProductsSearchbar = (props) => {
                       { id },
                       {
                         "_where[0][name_contains]": e.target.value,
+                        "_where[0][brand.id]": id,
                       }
                     )
                   );

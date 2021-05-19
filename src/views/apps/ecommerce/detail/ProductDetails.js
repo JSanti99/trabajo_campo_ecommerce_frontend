@@ -102,13 +102,9 @@ const Product = (props) => {
         <h4>{data.name}</h4>
         <CardText tag="span" className="item-company">
           By
-          <a
-            className="company-name"
-            href="/"
-            onClick={(e) => e.preventDefault()}
-          >
+          <Link className="company-name" to="/pages/profile">
             {data.brand}
-          </a>
+          </Link>
         </CardText>
         <div className="ecommerce-details-price d-flex flex-wrap mt-1">
           <h4 className="item-price mr-1">${data.price}</h4>

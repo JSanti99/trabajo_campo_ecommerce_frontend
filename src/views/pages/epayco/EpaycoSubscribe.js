@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import Card from "./Card";
 import { Button } from "reactstrap";
 import { useHistory } from "react-router-dom";
+
+import { Row, Col, Input, FormGroup, Media, Label, Form } from "reactstrap";
+import { Bell, Check, X, AlertTriangle, Info } from "react-feather";
+import { toast } from "react-toastify";
+import Avatar from "@components/avatar";
 
 const epayco = require("epayco-sdk-node")({
   apiKey: "323b2dcf18b7ba6732292fe5b617f3ec",
@@ -27,7 +32,7 @@ const Container = styled.div`
   text-align: center;
 `;
 
-const Form = styled.form`
+const FormStyled = styled.form`
   display: grid;
   grid-template-columns: subgrid;
   grid-template-rows: repeat(auto-fill, minmax(50px, 1fr));
@@ -64,6 +69,33 @@ const Test = styled.div`
 const P = styled.p`
   color: #fff;
 `;
+
+const ProgressToast = ({ status }) => (
+  <Fragment>
+    <div className="toastify-header">
+      <div className="title-wrapper">
+        <Avatar
+          size="sm"
+          color={status == "success" ? "success" : "danger"}
+          icon={<Check size={12} />}
+        />
+        <h6 className="toast-title">
+          {status == "success"
+            ? "Suscrito como comerciante!"
+            : "Ha ocurrido un error"}
+        </h6>
+      </div>
+      <small className="text-muted">Ahora</small>
+    </div>
+    <div className="toastify-body">
+      <span role="img" aria-label="toast-text">
+        {status == "success"
+          ? "👋 Suscrito al plan de comerciante satisfactoriamente!."
+          : "Ocurrió un error al actualizar tus datos."}
+      </span>
+    </div>
+  </Fragment>
+);
 
 const EpaycoSubscribe = () => {
   const {
@@ -108,16 +140,32 @@ const EpaycoSubscribe = () => {
             console.log(paidSub);
             if (paidSub.data.respuesta === "Aprobada") {
               axios
-                .put(`http://localhost:1337/users/${userData.id}`, {
-                  role: "3",
-                  ability: [
-                    { action: "read", subject: "ACL" },
-                    { action: "manage", subject: "TIENDA" },
-                  ],
+                .post("http://localhost:1337/tiendas", {
+                  user: userData.id,
+                  companyName: userData.username,
                 })
-                .then((r) =>
-                  localStorage.setItem("userData", JSON.stringify(r.data))
-                );
+                .then((res) => {
+                  axios
+                    .put(`http://localhost:1337/users/${userData.id}`, {
+                      role: "3",
+                      ability: [
+                        { action: "read", subject: "ACL" },
+                        { action: "manage", subject: "TIENDA" },
+                      ],
+                      brand: res.id,
+                    })
+                    .then((r) => {
+                      localStorage.setItem("userData", JSON.stringify(r.data));
+                      toast.success(<ProgressToast status="success" />);
+                      window.location.reload();
+                      // setTimeout(
+                      //   function () {
+                      //     history.push("/pages/profile");
+                      //   }.bind(this),
+                      //   4000
+                      // );
+                    });
+                });
             }
           })
           .catch((errPaid) => console.log({ errPaid }));
@@ -178,7 +226,7 @@ const EpaycoSubscribe = () => {
       {condiciones ? (
         <>
           {customer.data.cards[0] ? (
-            <Form onSubmit={handleSubmit(onSubmit)} id="customer-form">
+            <FormStyled onSubmit={handleSubmit(onSubmit)} id="customer-form">
               <StyledButton
                 type="button"
                 onClick={() => handleDeleteCard(JSON.parse(getValues().number))}
@@ -197,7 +245,7 @@ const EpaycoSubscribe = () => {
                 ))}
               </Select>
               <StyledButton type="submit">SUSCRIBIRSE</StyledButton>
-            </Form>
+            </FormStyled>
           ) : (
             "Ingresa una tarjeta a EPAYCO"
           )}

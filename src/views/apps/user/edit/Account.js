@@ -1,6 +1,7 @@
 // ** React Imports
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 // ** Custom Components
 import Avatar from "@components/avatar";
@@ -8,18 +9,46 @@ import Avatar from "@components/avatar";
 // ** Third Party Components
 import { Lock, Edit, Trash2 } from "react-feather";
 import {
-  Media,
   Row,
   Col,
-  Button,
-  Form,
   Input,
-  Label,
+  Button,
   FormGroup,
-  Table,
-  CustomInput,
+  Media,
+  Label,
+  Form,
 } from "reactstrap";
+import { Bell, Check, X, AlertTriangle, Info } from "react-feather";
 import TokenCard from "../../../pages/epayco/TokenCard";
+
+import { toast } from "react-toastify";
+
+const ProgressToast = ({ status }) => (
+  <Fragment>
+    <div className="toastify-header">
+      <div className="title-wrapper">
+        <Avatar
+          size="sm"
+          color={status == "success" ? "success" : "danger"}
+          icon={<Check size={12} />}
+        />
+        <h6 className="toast-title">
+          {status == "success"
+            ? "Usuario actualizado!"
+            : "Ha ocurrido un error"}
+        </h6>
+      </div>
+      <small className="text-muted">Ahora</small>
+    </div>
+    <div className="toastify-body">
+      <span role="img" aria-label="toast-text">
+        {status == "success"
+          ? "👋 Hemos actualizado tus datos!."
+          : "Ocurrió un error al actualizar tus datos."}
+      </span>
+    </div>
+  </Fragment>
+);
 
 const UserAccountTab = ({ selectedUser }) => {
   // ** States
@@ -27,6 +56,7 @@ const UserAccountTab = ({ selectedUser }) => {
   const [userData, setUserData] = useState(null);
   const [doc_type, setDocType] = useState("CC");
   const [doc_number, setDocNumber] = useState(0);
+  const history = useHistory();
 
   // ** Function to change user image
   const onChange = (e) => {
@@ -46,9 +76,16 @@ const UserAccountTab = ({ selectedUser }) => {
         docType: doc_type,
         docNumber: doc_number,
       })
-      .then((user) =>
-        localStorage.setItem("userData", JSON.stringify(user.data))
-      );
+      .then((user) => {
+        localStorage.setItem("userData", JSON.stringify(user.data));
+        toast.success(<ProgressToast status="success" />);
+        setTimeout(
+          function () {
+            history.push("/epayco");
+          }.bind(this),
+          4000
+        );
+      });
   };
 
   // ** Update user image on mount or change
