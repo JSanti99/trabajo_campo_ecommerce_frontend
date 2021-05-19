@@ -112,7 +112,7 @@ const UserInfoCard = ({ selectedUser }) => {
                   <DollarSign className="text-primary" />
                 </div>
                 <div className="ml-1">
-                  <h5 className="mb-0">$12.000.000</h5>
+                  <h5 className="mb-0">$0.00</h5>
                   <small>Ventas mensuales</small>
                 </div>
               </div>
@@ -121,7 +121,7 @@ const UserInfoCard = ({ selectedUser }) => {
                   <TrendingUp className="text-success" />
                 </div>
                 <div className="ml-1">
-                  <h5 className="mb-0">$100.000.000</h5>
+                  <h5 className="mb-0">$0.00</h5>
                   <small>Beneficio anual</small>
                 </div>
               </div>
@@ -184,7 +184,9 @@ const UserInfoCard = ({ selectedUser }) => {
                   </CardText>
                 </div>
                 <CardText className="mb-0">
-                  {selectedUser.brand ? selectedUser.brand : "No Aplica"}
+                  {selectedUser.brand
+                    ? selectedUser.brand.companyName
+                    : "No Aplica"}
                 </CardText>
               </div>
               <div className="d-flex flex-wrap align-items-center">

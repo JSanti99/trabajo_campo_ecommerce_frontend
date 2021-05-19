@@ -45,8 +45,7 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    if (data && data.tienda) {
-      console.log({ id: data.tienda.id });
+    if (data && data.brand) {
       dispatch(
         getProductsTienda(
           { id: data.brand.id },
@@ -58,6 +57,7 @@ const Profile = () => {
       );
     }
   }, [data, dispatch]);
+
   return (
     <Fragment>
       <Breadcrumbs
@@ -74,7 +74,7 @@ const Profile = () => {
           </Row>
         </div>
       ) : null}
-      {data && data.tienda ? (
+      {data && data.brand ? (
         <Fragment>
           <Products
             store={store}
@@ -92,7 +92,7 @@ const Profile = () => {
             deleteWishlistItem={deleteWishlistItem}
           />
           <Sidebar
-            id={data.tienda.id}
+            id={data.brand.id}
             store={store}
             dispatch={dispatch}
             getProducts={getProductsTienda}
@@ -100,7 +100,21 @@ const Profile = () => {
           />
         </Fragment>
       ) : (
-        <Button>Crea tu Tienda!</Button>
+        <Button
+          onClick={(e) => {
+            console.log(data);
+            axios
+              .post("http://localhost:1337/tiendas", {
+                user: data.id,
+                companyName: "test name",
+              })
+              .then((res) => {
+                // window.location.reload();
+              });
+          }}
+        >
+          Crea tu Tienda!
+        </Button>
       )}
     </Fragment>
   );

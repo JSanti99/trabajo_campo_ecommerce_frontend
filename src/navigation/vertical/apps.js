@@ -74,14 +74,14 @@ export default [
   },
   {
     id: "eCommerce",
-    title: "eCommerce",
+    title: "Productos",
     icon: <ShoppingCart size={20} />,
     action: "read",
     resource: "ACL",
     children: [
       {
         id: "shop",
-        title: "Shop",
+        title: "Todos",
         icon: <Circle size={12} />,
         navLink: "/apps/ecommerce/shop",
         action: "read",
@@ -89,11 +89,9 @@ export default [
       },
       {
         id: "detail",
-        title: "Details",
+        title: "Detalles",
         icon: <Circle size={12} />,
         navLink: "/apps/ecommerce/product-detail",
-        action: "read",
-        resource: "ACL",
       },
       {
         id: "wishList",
@@ -106,12 +104,14 @@ export default [
         title: "Checkout",
         icon: <Circle size={12} />,
         navLink: "/apps/ecommerce/checkout",
+        action: "read",
+        resource: "ACL",
       },
     ],
   },
   {
     id: "users",
-    title: "User",
+    title: "Usuario",
     icon: <User size={20} />,
     children: [
       {
@@ -122,17 +122,27 @@ export default [
       },
       {
         id: "view",
-        title: "View",
+        title: "Ver",
         icon: <Circle size={12} />,
         navLink: "/apps/user/view",
+        action: "manage",
+        resource: "TIENDA",
       },
       {
         id: "edit",
-        title: "Edit",
+        title: "Editar",
         icon: <Circle size={12} />,
         navLink: "/apps/user/edit",
         action: "read",
         resource: "ACL",
+      },
+      {
+        id: "blogEdit",
+        title: "Crear Productos",
+        permissions: ["admin", "editor"],
+        navLink: "/pages/blog/edit",
+        action: "manage",
+        resource: "TIENDA",
       },
     ],
   },

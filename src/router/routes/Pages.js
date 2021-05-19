@@ -158,12 +158,19 @@ const PagesRoutes = [
     component: lazy(() => import("../../views/pages/blog/edit")),
     meta: {
       navLink: "/pages/blog/edit",
+      action: "manage",
+      resource: "TIENDA",
     },
   },
   {
     path: "/pages/blog/edit",
     exact: true,
     component: () => <Redirect to="/pages/blog/edit/1" />,
+    meta: {
+      navLink: "/pages/blog/edit",
+      action: "manage",
+      resource: "TIENDA",
+    },
   },
   {
     path: "/pages/pricing",

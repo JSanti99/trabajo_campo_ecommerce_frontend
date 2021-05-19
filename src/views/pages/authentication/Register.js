@@ -67,39 +67,42 @@ const Register = () => {
         },
       ];
 
-      useJwt
-        .register({
-          username,
-          firstNames,
-          lastNames,
-          email,
-          password,
-          ability: userAbility,
-        })
-        .then((res) => {
-          if (res.data.error) {
-            const arr = {};
-            for (const property in res.data.error) {
-              if (res.data.error[property] !== null)
-                arr[property] = res.data.error[property];
+      useJwt.createCart().then(({ data }) => {
+        useJwt
+          .register({
+            username,
+            firstNames,
+            lastNames,
+            email,
+            password,
+            ability: userAbility,
+            cart: data,
+          })
+          .then((res) => {
+            if (res.data.error) {
+              const arr = {};
+              for (const property in res.data.error) {
+                if (res.data.error[property] !== null)
+                  arr[property] = res.data.error[property];
+              }
+              setValErrors(arr);
+              if (res.data.error.email !== null)
+                console.error(res.data.error.email);
+              if (res.data.error.username !== null)
+                console.error(res.data.error.username);
+            } else {
+              setValErrors({});
+              const data = {
+                ...res.data.user,
+                accessToken: res.data.jwt,
+              };
+              dispatch(handleLogin(data));
+              ability.update(res.data.user.ability);
+              history.push(getHomeRouteForLoggedInUser(data.role.type));
             }
-            setValErrors(arr);
-            if (res.data.error.email !== null)
-              console.error(res.data.error.email);
-            if (res.data.error.username !== null)
-              console.error(res.data.error.username);
-          } else {
-            setValErrors({});
-            const data = {
-              ...res.data.user,
-              accessToken: res.data.jwt,
-            };
-            dispatch(handleLogin(data));
-            ability.update(res.data.user.ability);
-            history.push(getHomeRouteForLoggedInUser(data.role.type));
-          }
-        })
-        .catch((err) => console.log(err));
+          })
+          .catch((err) => console.log(err));
+      });
     }
   };
 

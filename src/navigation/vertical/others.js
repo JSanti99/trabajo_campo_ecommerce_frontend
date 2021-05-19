@@ -1,11 +1,11 @@
 import { Menu, Circle, EyeOff, Folder, LifeBuoy, Shield } from "react-feather";
 export default [
   {
-    header: "Misc",
+    header: "Permisos",
   },
   {
     id: "access-control",
-    title: "Access Control",
+    title: "Control de Acceso",
     icon: <Shield size={12} />,
     action: "read",
     resource: "ACL",

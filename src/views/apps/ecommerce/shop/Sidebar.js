@@ -27,9 +27,9 @@ const Sidebar = (props) => {
   // ** Array of categories
   useEffect(() => {
     axios
-      .get(`${endpoint}/categorias`)
+      .get(`${endpoint}/category`)
       .then((response) =>
-        setCategories(response.data.map((b) => ({ id: b.id, title: b.nombre })))
+        setCategories(response.data.map((b) => ({ id: b.id, title: b.label })))
       );
   }, []);
 
@@ -89,13 +89,13 @@ const Sidebar = (props) => {
         >
           <Row>
             <Col sm="12">
-              <h6 className="filter-heading d-none d-lg-block">Filters</h6>
+              <h6 className="filter-heading d-none d-lg-block"> Filtros</h6>
             </Col>
           </Row>
           <Card>
             <CardBody>
               <div className="multi-range-price">
-                <h6 className="filter-title mt-0">Multi Range</h6>
+                <h6 className="filter-title mt-0">Rango múltiple</h6>
                 <ul className="list-unstyled price-range">
                   <li>
                     <CustomInput
@@ -105,12 +105,7 @@ const Sidebar = (props) => {
                       label="All"
                       onChange={() => {
                         if (id) {
-                          dispatch(
-                            { id },
-                            getProducts({
-                              ...deleteParams(),
-                            })
-                          );
+                          dispatch(getProducts({ id }, { ...deleteParams() }));
                         } else {
                           dispatch(
                             getProducts({
@@ -241,7 +236,7 @@ const Sidebar = (props) => {
                 </ul>
               </div>
               <div className="price-slider">
-                <h6 className="filter-title">Price Range</h6>
+                <h6 className="filter-title">Rango de precios</h6>
                 <div className="price-slider">
                   <Nouislider
                     className="range-slider mt-2"
@@ -282,7 +277,7 @@ const Sidebar = (props) => {
                 </div>
               </div>
               <div id="product-categories">
-                <h6 className="filter-title">Categories</h6>
+                <h6 className="filter-title">Categorias</h6>
                 <ul className="list-unstyled categories-list">
                   {categories &&
                     categories.map((category) => {
@@ -301,7 +296,7 @@ const Sidebar = (props) => {
                                     { id },
                                     {
                                       ...deleteParams(),
-                                      "_where[0][categoria.nombre_in]":
+                                      "_where[0][category.label_in]":
                                         category.title,
                                     }
                                   )
@@ -310,7 +305,7 @@ const Sidebar = (props) => {
                                 dispatch(
                                   getProducts({
                                     ...deleteParams(),
-                                    "_where[0][categoria.nombre_in]":
+                                    "_where[0][category.label_in]":
                                       category.title,
                                   })
                                 );
@@ -322,44 +317,47 @@ const Sidebar = (props) => {
                     })}
                 </ul>
               </div>
-              <div className="brands">
-                <h6 className="filter-title">Brands</h6>
-                <ul className="list-unstyled brand-list">
-                  {brands &&
-                    brands.map((brand) => {
-                      return (
-                        <li key={brand}>
-                          <CustomInput
-                            name="brand-range-radio"
-                            type="radio"
-                            id={brand}
-                            label={brand}
-                            onChange={() => {
-                              if (id) {
-                                dispatch(
-                                  getProducts(
-                                    { id },
-                                    {
+              {!id && (
+                <div className="brands">
+                  <h6 className="filter-title">Tiendas</h6>
+                  <ul className="list-unstyled brand-list">
+                    {brands &&
+                      brands.map((brand) => {
+                        return (
+                          <li key={brand}>
+                            <CustomInput
+                              name="brand-range-radio"
+                              type="radio"
+                              id={brand}
+                              label={brand}
+                              onChange={() => {
+                                if (id) {
+                                  dispatch(
+                                    getProducts(
+                                      { id },
+                                      {
+                                        ...deleteParams(),
+                                        "_where[0][brand.companyName_in]":
+                                          brand,
+                                      }
+                                    )
+                                  );
+                                } else {
+                                  dispatch(
+                                    getProducts({
                                       ...deleteParams(),
-                                      "_where[0][tienda.companyName_in]": brand,
-                                    }
-                                  )
-                                );
-                              } else {
-                                dispatch(
-                                  getProducts({
-                                    ...deleteParams(),
-                                    "_where[0][tienda.companyName_in]": brand,
-                                  })
-                                );
-                              }
-                            }}
-                          />
-                        </li>
-                      );
-                    })}
-                </ul>
-              </div>
+                                      "_where[0][brand.companyName_in]": brand,
+                                    })
+                                  );
+                                }
+                              }}
+                            />
+                          </li>
+                        );
+                      })}
+                  </ul>
+                </div>
+              )}
               {/* <div id="ratings">
                 <h6 className="filter-title">Ratings</h6>
                 {ratings.map((item) => {
@@ -413,7 +411,7 @@ const Sidebar = (props) => {
                   }}
                   block
                 >
-                  Clear All Filters
+                  Borrar todos los filtros
                 </Button.Ripple>
               </div>
             </CardBody>

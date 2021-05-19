@@ -77,7 +77,7 @@ export default [
       },
       {
         id: "profile",
-        title: "Profile",
+        title: "Pagina Tienda",
         icon: <Circle size={12} />,
         permissions: ["admin", "editor"],
         navLink: "/pages/profile",
@@ -105,7 +105,7 @@ export default [
       },
       {
         id: "pricing",
-        title: "Pricing",
+        title: "Planes",
         icon: <Circle size={12} />,
         permissions: ["admin", "editor"],
         navLink: "/pages/pricing",

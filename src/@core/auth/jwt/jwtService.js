@@ -108,6 +108,10 @@ export default class JwtService {
     return axios.post(this.jwtConfig.loginEndpoint, ...args);
   }
 
+  createCart() {
+    return axios.post("http://localhost:1337/carts");
+  }
+
   register(...args) {
     return axios.post(this.jwtConfig.registerEndpoint, ...args);
   }

@@ -33,7 +33,10 @@ export const getUser = () => {
       .get("http://localhost:1337/users/me")
       .then((response) => {
         console.log(response.data);
-        response.data.brand = response.data.brand.companyName;
+        if (response.data.tienda) {
+          response.data.brand = response.data.tienda.companyName;
+        }
+
         dispatch({
           type: "GET_USER",
           selectedUser: response.data,
