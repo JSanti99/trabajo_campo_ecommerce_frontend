@@ -60,7 +60,7 @@ const renderClient = (row) => {
     ],
     color = states[stateNum];
 
-  if (row.user.userImg) {
+  if (false) {
     return (
       <Avatar
         className="mr-50"

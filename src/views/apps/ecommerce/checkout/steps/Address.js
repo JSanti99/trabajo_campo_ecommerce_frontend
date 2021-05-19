@@ -1,9 +1,11 @@
 // ** Utils
-import { isObjEmpty } from '@utils'
+import { isObjEmpty } from "@utils";
 
 // ** Third Party Components
-import classnames from 'classnames'
-import { useForm } from 'react-hook-form'
+import classnames from "classnames";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import {
   Form,
   Input,
@@ -16,27 +18,51 @@ import {
   CardText,
   Button,
   Row,
-  Col
-} from 'reactstrap'
+  Col,
+} from "reactstrap";
+import ButtonEpayco from "../../../../pages/epayco/ButtonEpayco";
 
-const Address = props => {
+const Address = (props) => {
   // ** Props
-  const { stepper } = props
+  const { stepper, getCartItems, products } = props;
 
   // ** Vars
-  const { register, errors, handleSubmit, trigger } = useForm()
+  const { register, errors, handleSubmit, trigger } = useForm();
+
+  const [userData, setUserData] = useState(null);
+  const [address, setAddress] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [taxBase, setTaxBase] = useState(null);
+
+  useEffect(() => {
+    setUserData(JSON.parse(localStorage.getItem("userData")));
+    if (products) {
+      let precio = 0,
+        desc = "";
+      products.forEach((producto) => {
+        precio = precio + +producto.price * +producto.qty * 1000;
+        desc = `${desc} , ${producto.name}`;
+      });
+      console.log({ precio });
+      setTaxBase(precio);
+      setDescription(desc);
+    }
+  }, [products]);
 
   // ** On form submit if there are no errors then go to next step
   const onSubmit = () => {
-    trigger()
+    trigger();
     if (isObjEmpty(errors)) {
-      stepper.next()
+      stepper.next();
     }
-  }
+  };
 
   return (
-    <Form className='list-view product-checkout' onSubmit={handleSubmit(onSubmit)}>
-      <Card>
+    <Form
+      className="list-view product-checkout"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      {/* <Card>
         <CardHeader className='flex-column align-items-start'>
           <CardTitle tag='h4'>Add New Address</CardTitle>
           <CardText className='text-muted mt-25'>
@@ -148,31 +174,39 @@ const Address = props => {
             </Col>
           </Row>
         </CardBody>
-      </Card>
-      <div className='customer-card'>
+      </Card> */}
+      <div className="customer-card">
         <Card>
           <CardHeader>
-            <CardTitle tag='h4'>John Doe</CardTitle>
+            <CardTitle tag="h4">John Doe</CardTitle>
           </CardHeader>
           <CardBody>
-            <CardText className='mb-0'>9447 Glen Eagles Drive</CardText>
-            <CardText>Lewis Center, OH 43035</CardText>
-            <CardText>UTC-5: Eastern Standard Time (EST)</CardText>
-            <CardText>202-555-0140</CardText>
-            <Button.Ripple
-              block
-              type='button'
-              color='primary'
-              onClick={() => stepper.next()}
-              className='btn-next delivery-address mt-2'
-            >
-              Deliver To This Address
-            </Button.Ripple>
+            <Col md="6" sm="12">
+              <FormGroup className="mb-2">
+                <Label for="address">Direccion:</Label>
+                <Input
+                  name="address"
+                  id="address"
+                  placeholder="Direccion"
+                  onChange={(e) => setAddress(e.target.value)}
+                />
+              </FormGroup>
+            </Col>
+            {taxBase * 1.19} |{taxBase} |{taxBase * 0.19}
+            {description}
+            {taxBase && description && (
+              <ButtonEpayco
+                tax={taxBase * 0.19}
+                taxBase={taxBase}
+                amount={taxBase * 1.19}
+                description={description}
+              />
+            )}
           </CardBody>
         </Card>
       </div>
     </Form>
-  )
-}
+  );
+};
 
-export default Address
+export default Address;

@@ -213,8 +213,17 @@ const PagesRoutes = [
     },
   },
   {
+    exact: true,
     path: "/epayco",
     component: lazy(() => import("../../views/pages/epayco/EpaycoSubscribe")),
+    meta: {
+      action: "read",
+      resource: "ACL",
+    },
+  },
+  {
+    path: "/epayco/confirmation",
+    component: lazy(() => import("../../views/pages/epayco/Epayco")),
     meta: {
       action: "read",
       resource: "ACL",

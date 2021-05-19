@@ -137,6 +137,7 @@ export const getProduct = (slug) => {
               image: "http://localhost:1337" + res.data.image.url,
               hasFreeShipping: res.data.hasFreeShipping,
               rating: res.data.rating,
+              variedades: res.data.variedades,
             },
           },
         };

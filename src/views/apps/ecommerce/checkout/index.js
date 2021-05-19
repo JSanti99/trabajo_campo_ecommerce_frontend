@@ -62,7 +62,13 @@ const Checkout = () => {
       title: "Dirección",
       subtitle: "Introduzca su dirección",
       icon: <Home size={18} />,
-      content: <Address stepper={stepper} />,
+      content: (
+        <Address
+          stepper={stepper}
+          products={store.cart}
+          getCartItems={getCartItems}
+        />
+      ),
     },
     // ,
     // {

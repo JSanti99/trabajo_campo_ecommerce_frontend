@@ -25,6 +25,7 @@ import {
   DropdownItem,
   DropdownMenu,
 } from "reactstrap";
+import ButtonGroup from "reactstrap/lib/ButtonGroup";
 
 const Product = (props) => {
   // ** Props
@@ -40,6 +41,7 @@ const Product = (props) => {
 
   // ** State
   const [selectedColor, setSelectedColor] = useState("primary");
+  const [rSelected, setRSelected] = useState(null);
 
   // ** Renders color options
   // const renderColorOptions = () => {
@@ -134,15 +136,28 @@ const Product = (props) => {
               <span>Envío gratuito</span>
             </li>
           ) : null}
-          {/* <li>
-            <DollarSign size={19} />
-            <span>EMI options available</span>
-          </li> */}
+          <li>{rSelected && <span>Medidas: {rSelected.medidas} </span>}</li>
         </ul>
         <hr />
         <div className="product-color-options">
-          <h6>Colors</h6>
-          <ul className="list-unstyled mb-0">{/* {renderColorOptions()} */}</ul>
+          <h6>Tallas</h6>
+          <ButtonGroup className="mb-1">
+            {data.variedades &&
+              data.variedades.map((variedad, i) => (
+                <Button
+                  outline
+                  color={
+                    rSelected && rSelected.id === variedad.id
+                      ? "primary"
+                      : "dark"
+                  }
+                  onClick={() => setRSelected(variedad)}
+                  active={rSelected && rSelected.id === variedad.id}
+                >
+                  {variedad.talla}
+                </Button>
+              ))}
+          </ButtonGroup>
         </div>
         <hr />
         <div className="d-flex flex-column flex-sm-row pt-1">
