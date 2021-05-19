@@ -60,10 +60,10 @@ const ProfileHeader = ({ data }) => {
             />
           </div>
           <div className="profile-title ml-3">
-            <h2 className="text-white">
+            <h2 className="text-black">
               {data.brand?.companyName || data.username}
             </h2>
-            <p className="text-white">{data.designation}</p>
+            <p className="text-black">{data.designation}</p>
           </div>
         </div>
       </div>

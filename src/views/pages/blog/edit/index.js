@@ -10,6 +10,9 @@ import Uppy from "@uppy/core";
 import { DragDrop } from "@uppy/react";
 import thumbnailGenerator from "@uppy/thumbnail-generator";
 
+// ** Default Avatar Image
+import defaultAvatar from "@src/assets/images/portrait/small/avatar-s-11.jpg";
+
 import {
   Row,
   Col,
@@ -38,38 +41,35 @@ import "@styles/react/libs/file-uploader/file-uploader.scss";
 import "react-slidedown/lib/slidedown.css";
 
 import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 
 const BlogEdit = () => {
-  const {
-    register,
-    control,
-    handleSubmit,
-    reset,
-    watch,
-    getValues,
-    setValue,
-  } = useForm({
-    defaultValues: {
-      title: "",
-      variations: [
-        {
-          sizes: { value: "XS", label: "XS" },
-          measures: "",
-          status: null,
-          stock: null,
-          price: 0,
-          estado: null,
-        },
-      ],
-      featuredImg: null,
-      category: null,
-      gender: null,
-      slug: "",
-      code: null,
-      files: [],
-      editor: "",
-    },
-  });
+  const history = useHistory();
+
+  const { register, control, handleSubmit, reset, watch, getValues, setValue } =
+    useForm({
+      defaultValues: {
+        title: "",
+        variations: [
+          {
+            sizes: { value: "XS", label: "XS" },
+            measures: "",
+            status: null,
+            stock: null,
+
+            estado: null,
+          },
+        ],
+        featuredImg: null,
+        category: null,
+        gender: null,
+        slug: "",
+        code: null,
+        price: null,
+        files: [],
+        editor: "",
+      },
+    });
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
     {
       control,
@@ -160,6 +160,13 @@ const BlogEdit = () => {
     }
   };
 
+  const handlePrice = (e) => {
+    if (e.target.value) {
+      let price = e.target.value;
+      setValue("price", price);
+    }
+  };
+
   const renderPreview = () => {
     if (previewArr.length) {
       return previewArr.map((src, index) => (
@@ -189,7 +196,7 @@ const BlogEdit = () => {
       variationsAux.push({
         talla: variation.sizes.value,
         medidas: variation.measures,
-        precio: Number(variation.price),
+
         stock: variation.stock,
       });
     });
@@ -218,13 +225,15 @@ const BlogEdit = () => {
         "Content-Type": "multipart/form-data",
       },
     });
-
+    console.log({ userData });
     const producto = {
+      brand: userData.brand.id,
       name: data.title,
       category: data.category,
       description: data.editor,
       genero: data.gender.value === "hombre" ? "H" : "M",
       codigo: data.code,
+      price: data.price,
       slug: data.slug,
       hasFreeShipping: true,
       variedades: variationsAux,
@@ -236,6 +245,7 @@ const BlogEdit = () => {
       .post("http://localhost:1337/productos", producto)
       .then((res) => {
         console.log(res);
+        history.push("/pages/profile");
       });
   };
 
@@ -256,9 +266,11 @@ const BlogEdit = () => {
                   <Avatar
                     className="mr-75"
                     img={
-                      userData.userImg
-                        ? `http://localhost:1337${userData.userImg.url}`
-                        : ""
+                      userData
+                        ? userData.userImg
+                          ? `http://localhost:1337${userData.userImg.formats.thumbnail.url}`
+                          : defaultAvatar
+                        : defaultAvatar
                     }
                     width="38"
                     height="38"
@@ -315,7 +327,7 @@ const BlogEdit = () => {
                     />
                   </Col>
 
-                  <Col md="4">
+                  <Col md="2">
                     <Label for="code">Codigo Articulo</Label>
 
                     <Controller
@@ -326,6 +338,24 @@ const BlogEdit = () => {
                           {...field}
                           onChange={(e) => {
                             handleCode(e);
+                            return field.onChange(e);
+                          }}
+                        />
+                      )}
+                    />
+                  </Col>
+
+                  <Col md="2">
+                    <Label for="precio">Precio</Label>
+
+                    <Controller
+                      control={control}
+                      name={"price"}
+                      render={(field) => (
+                        <Input
+                          {...field}
+                          onChange={(e) => {
+                            handlePrice(e);
                             return field.onChange(e);
                           }}
                         />
@@ -359,7 +389,7 @@ const BlogEdit = () => {
                           key={item.id}
                           className="justify-content-between align-items-center"
                         >
-                          <Col md={2}>
+                          <Col md={3}>
                             <Label for={`size-${index}`}>Tallas</Label>
                             <Controller
                               as={Select}
@@ -372,7 +402,7 @@ const BlogEdit = () => {
                             />
                           </Col>
 
-                          <Col md={2}>
+                          <Col md={3}>
                             <Label for={`measures`}>Medidas</Label>
                             <Controller
                               as={Input}
@@ -381,16 +411,7 @@ const BlogEdit = () => {
                               id={`measures`}
                             />
                           </Col>
-                          <Col md={2}>
-                            <Label for={`price`}>Precio </Label>
-                            <Controller
-                              as={Input}
-                              type="number"
-                              control={control}
-                              name={`variations[${index}].price`}
-                              id={`price`}
-                            />
-                          </Col>
+
                           <Col md={2}>
                             <Label for={`status`}>Estado</Label>
                             <Controller
@@ -419,6 +440,7 @@ const BlogEdit = () => {
 
                           <Col md={2}>
                             <Button
+                              id="button_remove"
                               color="danger"
                               className="text-nowrap px-1"
                               outline

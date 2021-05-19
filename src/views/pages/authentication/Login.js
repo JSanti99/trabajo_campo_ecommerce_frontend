@@ -41,7 +41,7 @@ const ToastContent = ({ name, role }) => (
     <div className="toastify-header">
       <div className="title-wrapper">
         <Avatar size="sm" color="success" icon={<Coffee size={12} />} />
-        <h6 className="toast-title font-weight-bold">Welcome, {name}</h6>
+        <h6 className="toast-title font-weight-bold">Bienvenido, {name}</h6>
       </div>
     </div>
     <div className="toastify-body">

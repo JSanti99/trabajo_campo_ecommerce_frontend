@@ -45,7 +45,7 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    if (data && data.tienda) {
+    if (data && data.brand) {
       dispatch(
         getProductsTienda(
           { id: data.brand.id },
@@ -74,7 +74,7 @@ const Profile = () => {
           </Row>
         </div>
       ) : null}
-      {data && data.tienda ? (
+      {data && data.brand ? (
         <Fragment>
           <Products
             store={store}
@@ -92,7 +92,7 @@ const Profile = () => {
             deleteWishlistItem={deleteWishlistItem}
           />
           <Sidebar
-            id={data.tienda.id}
+            id={data.brand.id}
             store={store}
             dispatch={dispatch}
             getProducts={getProductsTienda}
@@ -105,7 +105,7 @@ const Profile = () => {
             console.log(data);
             axios
               .post("http://localhost:1337/tiendas", {
-                user: data,
+                user: data.id,
                 companyName: "test name",
               })
               .then((res) => {

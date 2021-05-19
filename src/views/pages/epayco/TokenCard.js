@@ -1,9 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
+import Avatar from "@components/avatar";
 import Cards from "react-credit-cards";
 import { Row, Col, Input, Button, FormGroup } from "reactstrap";
+import { Bell, Check, X, AlertTriangle, Info } from "react-feather";
 import axios from "axios";
 
+import { useHistory } from "react-router-dom";
+
 import "react-credit-cards/es/styles-compiled.css";
+
+import { toast } from "react-toastify";
+
+const ProgressToast = ({ status }) => (
+  <Fragment>
+    <div className="toastify-header">
+      <div className="title-wrapper">
+        <Avatar
+          size="sm"
+          color={status == "success" ? "success" : "danger"}
+          icon={<Check size={12} />}
+        />
+        <h6 className="toast-title">
+          {status == "success"
+            ? "Usuario epayco creado!"
+            : "Ha ocurrido un error"}
+        </h6>
+      </div>
+      <small className="text-muted">Ahora</small>
+    </div>
+    <div className="toastify-body">
+      <span role="img" aria-label="toast-text">
+        {status == "success"
+          ? "👋 Hemos creado un usuario con tu email y la tarjeta ingresada."
+          : "Ocurrió un error al crear tu usuario epayco."}
+      </span>
+    </div>
+  </Fragment>
+);
 
 const epayco = require("epayco-sdk-node")({
   apiKey: "323b2dcf18b7ba6732292fe5b617f3ec",
@@ -13,6 +46,8 @@ const epayco = require("epayco-sdk-node")({
 });
 
 const TokenCard = ({ userData }) => {
+  const history = useHistory();
+
   const [number, setNumber] = useState("");
   const [exp_year, setExp_year] = useState("");
   const [exp_month, setExp_month] = useState("");
@@ -47,9 +82,16 @@ const TokenCard = ({ userData }) => {
                 .put(`http://localhost:1337/users/${userData.id}`, {
                   epaycoUserId: customer.data.customerId,
                 })
-                .then((user) =>
-                  localStorage.setItem("userData", JSON.stringify(user.data))
-                )
+                .then((user) => {
+                  toast.success(<ProgressToast status="success" />);
+                  setTimeout(
+                    function () {
+                      history.push("/epayco");
+                    }.bind(this),
+                    4000
+                  );
+                  localStorage.setItem("userData", JSON.stringify(user.data));
+                })
             );
         } else {
           axios
@@ -62,7 +104,15 @@ const TokenCard = ({ userData }) => {
                 email: userData.email,
               }
             )
-            .then((customer) => console.log({ customer }));
+            .then((customer) => {
+              toast.success(<ProgressToast status="success" />);
+              setTimeout(
+                function () {
+                  history.push("/epayco");
+                }.bind(this),
+                4000
+              );
+            });
         }
       });
   };

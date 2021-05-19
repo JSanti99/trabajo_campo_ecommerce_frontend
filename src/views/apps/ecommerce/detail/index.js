@@ -62,9 +62,9 @@ const Details = () => {
               />
             </CardBody>
             <ItemFeatures />
-            <CardBody>
+            {/* <CardBody>
               <RelatedProducts />
-            </CardBody>
+            </CardBody> */}
           </Card>
         ) : null}
       </div>

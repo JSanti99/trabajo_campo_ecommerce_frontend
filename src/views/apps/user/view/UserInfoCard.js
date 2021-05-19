@@ -184,7 +184,9 @@ const UserInfoCard = ({ selectedUser }) => {
                   </CardText>
                 </div>
                 <CardText className="mb-0">
-                  {selectedUser.brand ? selectedUser.brand : "No Aplica"}
+                  {selectedUser.brand
+                    ? selectedUser.brand.companyName
+                    : "No Aplica"}
                 </CardText>
               </div>
               <div className="d-flex flex-wrap align-items-center">

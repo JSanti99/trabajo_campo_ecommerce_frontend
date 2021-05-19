@@ -12,6 +12,8 @@ import {
 } from "reactstrap";
 import { useHistory } from "react-router-dom";
 
+import Pot1 from "../../../assets/images/illustration/Pot1.svg";
+
 const PricingCards = ({ data, duration }) => {
   const history = useHistory();
   const renderPricingCards = () => {
@@ -45,7 +47,7 @@ const PricingCards = ({ data, duration }) => {
                   </Badge>
                 </div>
               ) : null}
-              <img className={imgClasses} src={item.img} alt="pricing svg" />
+              <img className={imgClasses} src={Pot1} alt="pricing svg" />
               <h3>{item.title}</h3>
               <CardText>{item.subtitle}</CardText>
               <div className="annual-plan">

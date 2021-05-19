@@ -13,14 +13,14 @@ import {
 export default [
   {
     id: "eCommerce",
-    title: "eCommerce",
+    title: "Productos",
     icon: <ShoppingCart />,
     action: "read",
     resource: "ACL",
     children: [
       {
         id: "shop",
-        title: "Shop",
+        title: "Todos",
         icon: <Circle />,
         navLink: "/apps/ecommerce/shop",
         action: "read",
@@ -28,11 +28,9 @@ export default [
       },
       {
         id: "detail",
-        title: "Details",
+        title: "Detalles",
         icon: <Circle />,
         navLink: "/apps/ecommerce/product-detail",
-        action: "read",
-        resource: "ACL",
       },
       {
         id: "wishList",
@@ -52,7 +50,7 @@ export default [
   },
   {
     id: "users",
-    title: "User",
+    title: "Usuario",
     icon: <User />,
     action: "read",
     resource: "ACL",
@@ -65,7 +63,7 @@ export default [
       },
       {
         id: "view",
-        title: "View",
+        title: "Ver",
         icon: <Circle />,
         navLink: "/apps/user/view",
         action: "manage",
@@ -73,11 +71,19 @@ export default [
       },
       {
         id: "edit",
-        title: "Edit",
+        title: "Editar",
         icon: <Circle />,
         navLink: "/apps/user/edit",
         action: "read",
         resource: "ACL",
+      },
+      {
+        id: "blogEdit",
+        title: "Crear Productos",
+        icon: <Circle />,
+        navLink: "/pages/blog/edit",
+        action: "manage",
+        resource: "TIENDA",
       },
     ],
   },

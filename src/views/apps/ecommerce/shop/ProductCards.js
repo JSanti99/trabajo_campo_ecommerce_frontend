@@ -22,7 +22,7 @@ const ProductCards = (props) => {
 
   // ** Handle Move/Add to cart
   const handleCartBtn = (id, val) => {
-    if (val === false) {
+    if (true) {
       dispatch(addToCart(id));
     }
     dispatch(getCartItems());
@@ -90,13 +90,13 @@ const ProductCards = (props) => {
                   {item.name}
                 </Link>
                 <CardText tag="span" className="item-company">
-                  By{" "}
+                  By
                   <a
                     className="company-name"
                     href="/"
                     onClick={(e) => e.preventDefault()}
                   >
-                    {item.tienda?.companyName}
+                    {item.brand?.companyName}
                   </a>
                 </CardText>
               </h6>
@@ -110,12 +110,12 @@ const ProductCards = (props) => {
                   <h4 className="item-price">${item.price}</h4>
                   {item.hasFreeShipping ? (
                     <CardText className="shipping">
-                      <Badge color="light-success">Free Shipping</Badge>
+                      <Badge color="light-success">Envío gratuito</Badge>
                     </CardText>
                   ) : null}
                 </div>
               </div>
-              <Button
+              {/* <Button
                 className="btn-wishlist"
                 color="light"
                 onClick={() => handleWishlistClick(item.id, item.isInWishlist)}
@@ -127,7 +127,7 @@ const ProductCards = (props) => {
                   size={14}
                 />
                 <span>Wishlist</span>
-              </Button>
+              </Button> */}
               <Button
                 color="primary"
                 tag={CartBtnTag}
@@ -142,7 +142,9 @@ const ProductCards = (props) => {
                 /*eslint-enable */
               >
                 <ShoppingCart className="mr-50" size={14} />
-                <span>{item.isInCart ? "View In Cart" : "Add To Cart"}</span>
+                <span>
+                  {item.isInCart ? "Ver en el carrito" : "Añadir al carrito"}
+                </span>
               </Button>
             </div>
           </Card>

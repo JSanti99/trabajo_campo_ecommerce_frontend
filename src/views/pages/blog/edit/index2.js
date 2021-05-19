@@ -97,7 +97,7 @@ const BlogEdit = () => {
     axios.get("/blog/list/data/edit").then((res) => {
       featuredImg = res.data.featuredImage;
     });
-    axios.get("http://localhost:1337/categorias").then((res) => {
+    axios.get("http://localhost:1337/category").then((res) => {
       setCategories(res.data);
     });
 

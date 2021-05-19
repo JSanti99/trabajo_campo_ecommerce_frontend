@@ -45,9 +45,9 @@ const Shop = () => {
   return (
     <Fragment>
       <Breadcrumbs
-        breadCrumbTitle="Shop"
+        breadCrumbTitle="Tienda"
         breadCrumbParent="eCommerce"
-        breadCrumbActive="Shop"
+        breadCrumbActive="Productos"
       />
       <Products
         store={store}

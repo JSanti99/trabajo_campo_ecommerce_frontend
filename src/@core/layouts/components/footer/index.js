@@ -1,6 +1,6 @@
 // ** Icons Import
 import { Heart } from "react-feather";
-
+import { Frown } from "react-feather";
 const Footer = () => {
   return (
     <p className="clearfix mb-0">
@@ -11,13 +11,15 @@ const Footer = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Pixinvent
+          SCOM
         </a>
-        <span className="d-none d-sm-inline-block">, All rights Reserved</span>
+        <span className="d-none d-sm-inline-block">
+          , Todos los derechos reservados
+        </span>
       </span>
       <span className="float-md-right d-none d-md-block">
-        Made with
-        <Heart size={14} />
+        Hecho con
+        <Frown size={14} />
       </span>
     </p>
   );

@@ -20,7 +20,7 @@ const ProductsSearchbar = (props) => {
           <InputGroup className="input-group-merge">
             <Input
               className="search-product"
-              placeholder="Search Product"
+              placeholder="Buscar producto"
               onChange={(e) => {
                 if (id) {
                   dispatch(

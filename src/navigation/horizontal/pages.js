@@ -14,7 +14,7 @@ import {
 export default [
   {
     id: "pages",
-    title: "Pages",
+    title: "Tienda",
     icon: <FileText />,
     children: [
       {
@@ -88,7 +88,7 @@ export default [
       },
       {
         id: "profile",
-        title: "Profile",
+        title: "Pagina Tienda",
         icon: <User />,
         navLink: "/pages/profile",
         collapsed: true,
@@ -114,7 +114,7 @@ export default [
 
       {
         id: "pricing",
-        title: "Pricing",
+        title: "Planes",
         icon: <DollarSign />,
         navLink: "/pages/pricing",
         action: "read",
